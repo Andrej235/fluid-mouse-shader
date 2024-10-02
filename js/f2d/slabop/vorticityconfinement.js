@@ -1,30 +1,15 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.VorticityConfinement = class extends F2D.SlabopBase {
+class VorticityConfinement extends F2D.SlabopBase {
   constructor(fs, grid, time, epsilon, curl) {
-    var uniforms = {
-      velocity: {
-        type: "t",
-      },
-      vorticity: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      gridScale: {
-        type: "f",
-      },
-      timestep: {
-        type: "f",
-      },
-      epsilon: {
-        type: "f",
-      },
-      curl: {
-        type: "v2",
-        value: new THREE.Vector2(),
-      },
+    const uniforms = {
+      velocity: { type: "t" },
+      vorticity: { type: "t" },
+      gridSize: { type: "v2" },
+      gridScale: { type: "f" },
+      timestep: { type: "f" },
+      epsilon: { type: "f" },
+      curl: { type: "v2", value: new THREE.Vector2() },
     };
 
     super(fs, uniforms, grid);
@@ -35,6 +20,7 @@ F2D.VorticityConfinement = class extends F2D.SlabopBase {
     this.curl = curl === undefined ? 0.3 : curl;
     this.uniforms = uniforms;
   }
+
   compute(renderer, velocity, vorticity, output) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.vorticity.value = vorticity.read;
@@ -50,6 +36,6 @@ F2D.VorticityConfinement = class extends F2D.SlabopBase {
     renderer.render(this.scene, this.camera, output.write, false);
     output.swap();
   }
-};
+}
 
-F2D.VorticityConfinement.prototype = Object.create(F2D.SlabopBase.prototype);
+F2D.VorticityConfinement = VorticityConfinement;

@@ -1,6 +1,6 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Solver = class {
+class Solver {
   constructor(grid, time, windowSize, slabs, slabop) {
     this.grid = grid;
     this.time = time;
@@ -32,47 +32,11 @@ F2D.Solver = class {
     this.source = new THREE.Vector3(0.8, 0.0, 0.0);
     this.ink = new THREE.Vector3(0.0, 0.06, 0.19);
   }
-  static make(grid, time, windowSize, shaders) {
-    var w = grid.size.x,
-      h = grid.size.y;
 
-    var slabs = {
-      // vec2
-      velocity: F2D.Slab.make(w, h),
-      // scalar
-      density: F2D.Slab.make(w, h),
-      velocityDivergence: F2D.Slab.make(w, h),
-      velocityVorticity: F2D.Slab.make(w, h),
-      pressure: F2D.Slab.make(w, h),
-    };
-
-    var slabop = {
-      advect: new F2D.Advect(shaders.advect, grid, time),
-      diffuse: new F2D.Jacobi(shaders.jacobivector, grid),
-      divergence: new F2D.Divergence(shaders.divergence, grid),
-      poissonPressureEq: new F2D.Jacobi(shaders.jacobiscalar, grid),
-      gradient: new F2D.Gradient(shaders.gradient, grid),
-      splat: new F2D.Splat(shaders.splat, grid),
-      vorticity: new F2D.Vorticity(shaders.vorticity, grid),
-      vorticityConfinement: new F2D.VorticityConfinement(
-        shaders.vorticityforce,
-        grid,
-        time
-      ),
-      boundary: new F2D.Boundary(shaders.boundary, grid),
-    };
-
-    return new F2D.Solver(grid, time, windowSize, slabs, slabop);
-  }
-};
-
-F2D.Solver.prototype = {
-  constructor: F2D.Solver,
-
-  step: function (renderer, mouse) {
+  step(renderer, mouse) {
     // we only want the quantity carried by the velocity field to be
     // affected by the dissipation
-    var temp = this.advect.dissipation;
+    let temp = this.advect.dissipation;
     this.advect.dissipation = 1;
     this.advect.compute(renderer, this.velocity, this.velocity, this.velocity);
     this.boundary.compute(renderer, this.velocity, -1, this.velocity);
@@ -94,7 +58,7 @@ F2D.Solver.prototype = {
     }
 
     if (this.applyViscosity && this.viscosity > 0) {
-      var s = this.grid.scale;
+      let s = this.grid.scale;
 
       this.diffuse.alpha = (s * s) / (this.viscosity * this.time.step);
       this.diffuse.beta = 4 + this.diffuse.alpha;
@@ -109,48 +73,46 @@ F2D.Solver.prototype = {
     }
 
     this.project(renderer);
-  },
+  }
 
-  addForces: (function () {
-    var point = new THREE.Vector2();
-    var force = new THREE.Vector3();
-    return function (renderer, mouse) {
-      for (var i = 0; i < mouse.motions.length; i++) {
-        var motion = mouse.motions[i];
+  addForces(renderer, mouse) {
+    const point = new THREE.Vector2();
+    const force = new THREE.Vector3();
+    for (let i = 0; i < mouse.motions.length; i++) {
+      const motion = mouse.motions[i];
 
-        point.set(motion.position.x, this.windowSize.y - motion.position.y);
-        // normalize to [0, 1] and scale to grid size
-        point.x = (point.x / this.windowSize.x) * this.grid.size.x;
-        point.y = (point.y / this.windowSize.y) * this.grid.size.y;
+      point.set(motion.position.x, this.windowSize.y - motion.position.y);
+      // normalize to [0, 1] and scale to grid size
+      point.x = (point.x / this.windowSize.x) * this.grid.size.x;
+      point.y = (point.y / this.windowSize.y) * this.grid.size.y;
 
-        if (motion.left) {
-          force.set(motion.drag.x, -motion.drag.y, 0);
-          this.splat.compute(
-            renderer,
-            this.velocity,
-            force,
-            point,
-            this.velocity
-          );
-          this.boundary.compute(renderer, this.velocity, -1, this.velocity);
-        }
-
-        if (motion.right) {
-          this.splat.compute(
-            renderer,
-            this.density,
-            this.source,
-            point,
-            this.density
-          );
-        }
+      if (motion.left) {
+        force.set(motion.drag.x, -motion.drag.y, 0);
+        this.splat.compute(
+          renderer,
+          this.velocity,
+          force,
+          point,
+          this.velocity
+        );
+        this.boundary.compute(renderer, this.velocity, -1, this.velocity);
       }
-      mouse.motions = [];
-    };
-  })(),
+
+      if (motion.right) {
+        this.splat.compute(
+          renderer,
+          this.density,
+          this.source,
+          point,
+          this.density
+        );
+      }
+    }
+    mouse.motions = [];
+  }
 
   // solve poisson equation and subtract pressure gradient
-  project: function (renderer) {
+  project(renderer) {
     this.divergence.compute(renderer, this.velocity, this.velocityDivergence);
 
     // 0 is our initial guess for the poisson equation solver
@@ -173,10 +135,45 @@ F2D.Solver.prototype = {
       this.velocity
     );
     this.boundary.compute(renderer, this.velocity, -1, this.velocity);
-  },
+  }
 
-  clearSlab: function (renderer, slab) {
+  clearSlab(renderer, slab) {
     renderer.clearTarget(slab.write, true, false, false);
     slab.swap();
-  },
-};
+  }
+
+  static make(grid, time, windowSize, shaders) {
+    const w = grid.size.x,
+      h = grid.size.y;
+
+    const slabs = {
+      // vec2
+      velocity: F2D.Slab.make(w, h),
+      // scalar
+      density: F2D.Slab.make(w, h),
+      velocityDivergence: F2D.Slab.make(w, h),
+      velocityVorticity: F2D.Slab.make(w, h),
+      pressure: F2D.Slab.make(w, h),
+    };
+
+    const slabop = {
+      advect: new F2D.Advect(shaders.advect, grid, time),
+      diffuse: new F2D.Jacobi(shaders.jacobivector, grid),
+      divergence: new F2D.Divergence(shaders.divergence, grid),
+      poissonPressureEq: new F2D.Jacobi(shaders.jacobiscalar, grid),
+      gradient: new F2D.Gradient(shaders.gradient, grid),
+      splat: new F2D.Splat(shaders.splat, grid),
+      vorticity: new F2D.Vorticity(shaders.vorticity, grid),
+      vorticityConfinement: new F2D.VorticityConfinement(
+        shaders.vorticityforce,
+        grid,
+        time
+      ),
+      boundary: new F2D.Boundary(shaders.boundary, grid),
+    };
+
+    return new Solver(grid, time, windowSize, slabs, slabop);
+  }
+}
+
+F2D.Solver = Solver;
