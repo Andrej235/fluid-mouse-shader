@@ -1,11 +1,13 @@
 import * as THREE from "three";
+import renderScene from "./RenderFunctions";
+import { Uniforms } from "./F2D";
 
 export default class Display {
   vertexShader: string;
   fragmentShader: string;
   bias: THREE.Vector3;
   scale: THREE.Vector3;
-  uniforms: any; // TODO: type this
+  uniforms: Uniforms;
   material: THREE.ShaderMaterial;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
@@ -22,15 +24,9 @@ export default class Display {
     this.scale = scale === undefined ? new THREE.Vector3(1, 1, 1) : scale;
 
     this.uniforms = {
-      read: {
-        type: "t",
-      },
-      bias: {
-        type: "v3",
-      },
-      scale: {
-        type: "v3",
-      },
+      read: { value: null },
+      bias: { value: new THREE.Vector3() },
+      scale: { value: new THREE.Vector3() },
     };
 
     this.material = new THREE.ShaderMaterial({
@@ -56,7 +52,6 @@ export default class Display {
     this.scale.set(v, v, v);
   }
 
-  //TODO: Type this
   render(
     renderer: THREE.WebGLRenderer,
     read: THREE.WebGLRenderTarget<THREE.Texture>
@@ -64,6 +59,6 @@ export default class Display {
     this.uniforms.read.value = read;
     this.uniforms.bias.value = this.bias;
     this.uniforms.scale.value = this.scale;
-    renderer.render(this.scene, this.camera);
+    renderScene(renderer, this.scene, this.camera, read);
   }
 }

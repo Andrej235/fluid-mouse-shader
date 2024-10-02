@@ -83,7 +83,7 @@ export default class Solver {
     var temp = this.advect.dissipation;
     this.advect.dissipation = 1;
     this.advect.compute(renderer, this.velocity, this.velocity, this.velocity);
-    this.boundary.compute(renderer, this.velocity, -1);
+    this.boundary.compute(renderer, this.velocity, -1, this.velocity);
 
     this.advect.dissipation = temp;
     this.advect.compute(renderer, this.velocity, this.density, this.density);
@@ -98,7 +98,7 @@ export default class Solver {
         this.velocityVorticity,
         this.velocity
       );
-      this.boundary.compute(renderer, this.velocity, -1);
+      this.boundary.compute(renderer, this.velocity, -1, this.velocity);
     }
 
     if (this.applyViscosity && this.viscosity > 0) {
@@ -140,7 +140,7 @@ export default class Solver {
           point,
           this.velocity
         );
-        this.boundary.compute(renderer, this.velocity, -1);
+        this.boundary.compute(renderer, this.velocity, -1, this.velocity);
       }
 
       if (motion.right) {
@@ -179,11 +179,14 @@ export default class Solver {
       this.velocity,
       this.velocity
     );
-    this.boundary.compute(renderer, this.velocity, -1);
+    this.boundary.compute(renderer, this.velocity, -1, this.velocity);
   }
 
   clearSlab(renderer: THREE.WebGLRenderer, slab: Slab) {
-    renderer.clearTarget(slab.write, true, false, false);
+    // console.log(renderer.clearTarget);
+    // renderer.clearTarget(slab.write, true, false, false);
+    renderer.setRenderTarget(slab.write);
+    renderer.clear(true, false, false);
     slab.swap();
   }
 

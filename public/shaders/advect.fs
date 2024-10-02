@@ -7,8 +7,7 @@ uniform float gridScale;
 uniform float timestep;
 uniform float dissipation;
 
-vec2 bilerp(sampler2D d, vec2 p)
-{
+vec2 bilerp(sampler2D d, vec2 p) {
     vec4 ij; // i0, j0, i1, j1
     ij.xy = floor(p - 0.5) + 0.5;
     ij.zw = ij.xy + 1.0;
@@ -24,8 +23,7 @@ vec2 bilerp(sampler2D d, vec2 p)
     return mix(mix(d11, d21, a.x), mix(d12, d22, a.x), a.y);
 }
 
-void main()
-{
+void main() {
     vec2 uv = gl_FragCoord.xy / gridSize.xy;
     float scale = 1.0 / gridScale;
 

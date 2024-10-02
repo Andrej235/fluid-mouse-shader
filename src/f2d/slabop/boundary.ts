@@ -1,10 +1,11 @@
 import * as THREE from "three";
-import { Grid } from "../F2D";
+import { Grid, Uniforms } from "../F2D";
 import Slab from "../slab";
+import renderScene from "../RenderFunctions";
 
 export class Boundary {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
   lineL: THREE.Line<
     THREE.BufferGeometry<THREE.NormalBufferAttributes>,
     THREE.ShaderMaterial,
@@ -34,18 +35,10 @@ export class Boundary {
     this.grid = grid;
 
     this.uniforms = {
-      read: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      gridOffset: {
-        type: "v2",
-      },
-      scale: {
-        type: "f",
-      },
+      read: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridOffset: { value: new THREE.Vector2() },
+      scale: { value: 1.0 },
     };
 
     this.material = new THREE.ShaderMaterial({
@@ -102,27 +95,33 @@ export class Boundary {
   renderLine(
     renderer: THREE.WebGLRenderer,
     line: THREE.Line,
-    offset: [number, number]
+    offset: [number, number],
+    output: Slab
   ) {
     this.scene.add(line);
     this.gridOffset.set(offset[0], offset[1], 0);
     this.uniforms.gridOffset.value = this.gridOffset;
-    renderer.render(this.scene, this.camera /* , output.write, false */);
+    renderScene(renderer, this.scene, this.camera, output.write);
     this.scene.remove(line);
     // we do not swap output, the next slab operation will fill in the
     // iterior and swap it
   }
 
-  compute(renderer: THREE.WebGLRenderer, input: Slab, scale: number) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    input: Slab,
+    scale: number,
+    output: Slab
+  ) {
     if (!this.grid.applyBoundaries) return;
 
     this.uniforms.read.value = input.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.scale.value = scale;
 
-    this.renderLine(renderer, this.lineL, [1, 0]);
-    this.renderLine(renderer, this.lineR, [-1, 0]);
-    this.renderLine(renderer, this.lineB, [0, 1]);
-    this.renderLine(renderer, this.lineT, [0, -1]);
+    this.renderLine(renderer, this.lineL, [1, 0], output);
+    this.renderLine(renderer, this.lineR, [-1, 0], output);
+    this.renderLine(renderer, this.lineB, [0, 1], output);
+    this.renderLine(renderer, this.lineT, [0, -1], output);
   }
 }

@@ -1,12 +1,13 @@
-import { WebGLRenderer } from "three";
-import { Grid } from "../F2D";
+import { Vector2, WebGLRenderer } from "three";
+import { Grid, Uniforms } from "../F2D";
 import Slab from "../slab";
 import { Boundary } from "./boundary";
 import SlabopBase from "./slabopbase";
+import renderScene from "../RenderFunctions";
 
 export default class Jacobi extends SlabopBase {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
   iterations: number;
   alpha: number;
   beta: number;
@@ -19,21 +20,11 @@ export default class Jacobi extends SlabopBase {
     beta?: number
   ) {
     const uniforms = {
-      x: {
-        type: "t",
-      },
-      b: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      alpha: {
-        type: "f",
-      },
-      beta: {
-        type: "f",
-      },
+      x: { value: null },
+      b: { value: null },
+      gridSize: { value: new Vector2() },
+      alpha: { value: 1.0 },
+      beta: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -55,7 +46,7 @@ export default class Jacobi extends SlabopBase {
   ) {
     for (var i = 0; i < this.iterations; i++) {
       this.step(renderer, x, b, output);
-      boundary.compute(renderer, output, scale);
+      boundary.compute(renderer, output, scale, output);
     }
   }
 
@@ -66,7 +57,7 @@ export default class Jacobi extends SlabopBase {
     this.uniforms.alpha.value = this.alpha;
     this.uniforms.beta.value = this.beta;
 
-    renderer.render(this.scene, this.camera);
+    renderScene(renderer, this.scene, this.camera, output.write);
     output.swap();
   }
 }

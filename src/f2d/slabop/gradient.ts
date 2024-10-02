@@ -1,27 +1,19 @@
-import { WebGLRenderer } from "three";
-import { Grid } from "../F2D";
+import { Vector2, WebGLRenderer } from "three";
+import { Grid, Uniforms } from "../F2D";
 import SlabopBase from "./slabopbase";
 import Slab from "../slab";
+import renderScene from "../RenderFunctions";
 
-// TODO: type this
 export default class Gradient extends SlabopBase {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
-      p: {
-        type: "t",
-      },
-      w: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      gridScale: {
-        type: "f",
-      },
+      p: { value: null },
+      w: { value: null },
+      gridSize: { value: new Vector2() },
+      gridScale: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -35,7 +27,7 @@ export default class Gradient extends SlabopBase {
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera);
+    renderScene(renderer, this.scene, this.camera, output.write);
     output.swap();
   }
 }

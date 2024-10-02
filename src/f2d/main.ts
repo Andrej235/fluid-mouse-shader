@@ -95,6 +95,7 @@ function init(shaders: Record<string, string>) {
 function update() {
   solver.step(renderer, mouse);
   render();
+  console.log(displayScalar, displayVector);
   requestAnimationFrame(update);
 }
 

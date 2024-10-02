@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import SlabopBase from "./slabopbase";
-import { Grid, Time } from "../F2D";
+import { Grid, Time, Uniforms } from "../F2D";
 import Slab from "../slab";
+import renderScene from "../RenderFunctions";
 
 export default class VorticityConfinement extends SlabopBase {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
   time: Time;
   epsilon: number;
   curl: number;
@@ -18,28 +19,13 @@ export default class VorticityConfinement extends SlabopBase {
     curl?: number
   ) {
     const uniforms = {
-      velocity: {
-        type: "t",
-      },
-      vorticity: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      gridScale: {
-        type: "f",
-      },
-      timestep: {
-        type: "f",
-      },
-      epsilon: {
-        type: "f",
-      },
-      curl: {
-        type: "v2",
-        value: new THREE.Vector2(),
-      },
+      velocity: { value: null },
+      vorticity: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridScale: { value: 1.0 },
+      timestep: { value: 1.0 },
+      epsilon: { value: 1.0 },
+      curl: { value: new THREE.Vector2() },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -68,7 +54,7 @@ export default class VorticityConfinement extends SlabopBase {
       this.curl * this.grid.scale
     );
 
-    renderer.render(this.scene, this.camera);
+    renderScene(renderer, this.scene, this.camera, output.write);
     output.swap();
   }
 }

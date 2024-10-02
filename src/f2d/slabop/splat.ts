@@ -1,31 +1,21 @@
-import { Grid } from "../F2D";
+import { Grid, Uniforms } from "../F2D";
+import renderScene from "../RenderFunctions";
 import Slab from "../slab";
 import SlabopBase from "./slabopbase";
 import * as THREE from "three";
 
-// TODO: type this
 export default class Splat extends SlabopBase {
-  uniforms: any;
+  uniforms: Uniforms;
   grid: Grid;
   radius: number;
 
   constructor(fs: string, grid: Grid, radius?: number) {
     const uniforms = {
-      read: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      color: {
-        type: "v3",
-      },
-      point: {
-        type: "v2",
-      },
-      radius: {
-        type: "f",
-      },
+      read: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      color: { value: new THREE.Vector3() },
+      point: { value: new THREE.Vector2() },
+      radius: { value: 1.0 },
     };
 
     super(fs, uniforms, grid);
@@ -47,7 +37,8 @@ export default class Splat extends SlabopBase {
     this.uniforms.point.value = point;
     this.uniforms.radius.value = this.radius;
 
-    renderer.render(this.scene, this.camera /* , output.write, false */);
+    renderer.setRenderTarget(output.write);
+    renderScene(renderer, this.scene, this.camera, output.write);
     output.swap();
   }
 }

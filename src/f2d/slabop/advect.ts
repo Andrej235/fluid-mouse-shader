@@ -1,4 +1,5 @@
-import { Grid, Time } from "../F2D";
+import { Grid, Time, Uniforms } from "../F2D";
+import renderScene from "../RenderFunctions";
 import Slab from "../slab";
 import SlabopBase from "./slabopbase";
 import * as THREE from "three";
@@ -7,7 +8,7 @@ export default class Advect extends SlabopBase {
   grid: Grid;
   time: Time;
   dissipation: number;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(
     fragmentShader: string,
@@ -16,24 +17,12 @@ export default class Advect extends SlabopBase {
     dissipation?: number
   ) {
     const uniforms = {
-      velocity: {
-        type: "t",
-      },
-      advected: {
-        type: "t",
-      },
-      gridSize: {
-        type: "v2",
-      },
-      gridScale: {
-        type: "f",
-      },
-      timestep: {
-        type: "f",
-      },
-      dissipation: {
-        type: "f",
-      },
+      velocity: { value: null },
+      advected: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridScale: { value: 1.0 },
+      timestep: { value: 1.0 },
+      dissipation: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -57,7 +46,7 @@ export default class Advect extends SlabopBase {
     this.uniforms.timestep.value = this.time.step;
     this.uniforms.dissipation.value = this.dissipation;
 
-    renderer.render(this.scene, this.camera /* output.write, false */);
+    renderScene(renderer, this.scene, this.camera, output.write);
     output.swap();
   }
 }
