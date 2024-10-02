@@ -1,16 +1,22 @@
 import * as THREE from "three";
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
+import { Grid, Time } from "../F2D";
 
-(function (F2D) {
-  "use strict";
+export default class VorticityConfinement extends SlabopBase {
+  grid: Grid;
+  uniforms: any;
+  time: Time;
+  epsilon: number;
+  curl: number;
 
-  F2D.VorticityConfinement = function (fs, grid, time, epsilon, curl) {
-    this.grid = grid;
-    this.time = time;
-    this.epsilon = epsilon === undefined ? 2.4414e-4 : epsilon;
-    this.curl = curl === undefined ? 0.3 : curl;
-
-    this.uniforms = {
+  constructor(
+    fragmentShader: string,
+    grid: Grid,
+    time: Time,
+    epsilon?: number,
+    curl?: number
+  ) {
+    const uniforms = {
       velocity: {
         type: "t",
       },
@@ -35,18 +41,16 @@ var F2D = F2D === undefined ? {} : F2D;
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
-  };
+    super(fragmentShader, uniforms, grid);
 
-  F2D.VorticityConfinement.prototype = Object.create(F2D.SlabopBase.prototype);
-  F2D.VorticityConfinement.prototype.constructor = F2D.VorticityConfinement;
+    this.grid = grid;
+    this.time = time;
+    this.epsilon = epsilon === undefined ? 2.4414e-4 : epsilon;
+    this.curl = curl === undefined ? 0.3 : curl;
+    this.uniforms = uniforms;
+  }
 
-  F2D.VorticityConfinement.prototype.compute = function (
-    renderer,
-    velocity,
-    vorticity,
-    output
-  ) {
+  compute(renderer: any, velocity: any, vorticity: any, output: any) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.vorticity.value = vorticity.read;
     this.uniforms.gridSize.value = this.grid.size;
@@ -60,5 +64,5 @@ var F2D = F2D === undefined ? {} : F2D;
 
     renderer.render(this.scene, this.camera, output.write, false);
     output.swap();
-  };
-})(F2D);
+  }
+}

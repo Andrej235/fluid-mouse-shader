@@ -1,45 +1,45 @@
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid } from "../F2D";
+import SlabopBase from "./slabopbase";
 
-(function(F2D) {
-    "use strict";
+// TODO: type this
+export default class Splat extends SlabopBase {
+  uniforms: any;
+  grid: Grid;
+  radius: number;
 
-    F2D.Splat = function(fs, grid, radius) {
-        this.grid = grid;
-        this.radius = radius === undefined ? 0.01 : radius;
-
-        this.uniforms = {
-            read: {
-                type: "t"
-            },
-            gridSize: {
-                type: "v2"
-            },
-            color: {
-                type: "v3"
-            },
-            point: {
-                type: "v2"
-            },
-            radius: {
-                type: "f"
-            }
-        };
-
-        F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+  constructor(fs: string, grid: Grid, radius?: number) {
+    const uniforms = {
+      read: {
+        type: "t",
+      },
+      gridSize: {
+        type: "v2",
+      },
+      color: {
+        type: "v3",
+      },
+      point: {
+        type: "v2",
+      },
+      radius: {
+        type: "f",
+      },
     };
 
-    F2D.Splat.prototype = Object.create(F2D.SlabopBase.prototype);
-    F2D.Splat.prototype.constructor = F2D.Splat;
+    super(fs, uniforms, grid);
+    this.grid = grid;
+    this.radius = radius === undefined ? 0.01 : radius;
+    this.uniforms = uniforms;
+  }
 
-    F2D.Splat.prototype.compute = function(renderer, input, color, point, output) {
-        this.uniforms.gridSize.value = this.grid.size;
-        this.uniforms.read.value = input.read;
-        this.uniforms.color.value = color;
-        this.uniforms.point.value = point;
-        this.uniforms.radius.value = this.radius;
+  compute(renderer: any, input: any, color: any, point: any, output: any) {
+    this.uniforms.gridSize.value = this.grid.size;
+    this.uniforms.read.value = input.read;
+    this.uniforms.color.value = color;
+    this.uniforms.point.value = point;
+    this.uniforms.radius.value = this.radius;
 
-        renderer.render(this.scene, this.camera, output.write, false);
-        output.swap();
-    };
-
-}(F2D));
+    renderer.render(this.scene, this.camera, output.write, false);
+    output.swap();
+  }
+}

@@ -1,36 +1,36 @@
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid } from "../F2D";
+import SlabopBase from "./slabopbase";
 
-(function(F2D) {
-    "use strict";
+// TODO: type this
+export default class Divergence extends SlabopBase {
+  grid: Grid;
+  uniforms: any;
 
-    F2D.Divergence = function(fs, grid) {
-        this.grid = grid;
-
-        this.uniforms = {
-            velocity: {
-                type: "t"
-            },
-            gridSize: {
-                type: "v2"
-            },
-            gridScale: {
-                type: "f"
-            },
-        };
-
-        F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+  constructor(fragmentShader: string, grid: Grid) {
+    const uniforms = {
+      velocity: {
+        type: "t",
+      },
+      gridSize: {
+        type: "v2",
+      },
+      gridScale: {
+        type: "f",
+      },
     };
 
-    F2D.Divergence.prototype = Object.create(F2D.SlabopBase.prototype);
-    F2D.Divergence.prototype.constructor = F2D.Divergence;
+    super(fragmentShader, uniforms, grid);
+    this.uniforms = uniforms;
+    this.grid = grid;
+  }
 
-    F2D.Divergence.prototype.compute = function(renderer, velocity, divergence) {
-        this.uniforms.velocity.value = velocity.read;
-        this.uniforms.gridSize.value = this.grid.size;
-        this.uniforms.gridScale.value = this.grid.scale;
+  //TODO: type this
+  compute(renderer: any, velocity: any, divergence: any) {
+    this.uniforms.velocity.value = velocity.read;
+    this.uniforms.gridSize.value = this.grid.size;
+    this.uniforms.gridScale.value = this.grid.scale;
 
-        renderer.render(this.scene, this.camera, divergence.write, false);
-        divergence.swap();
-    };
-
-}(F2D));
+    renderer.render(this.scene, this.camera, divergence.write, false);
+    divergence.swap();
+  }
+}

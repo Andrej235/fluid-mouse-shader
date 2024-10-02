@@ -1,50 +1,56 @@
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid, Time } from "../F2D";
+import SlabopBase from "./slabopbase";
 
-(function(F2D) {
-    "use strict";
+export default class Advect extends SlabopBase {
+  grid: Grid;
+  time: Time;
+  dissipation: number;
+  uniforms: any;
 
-    F2D.Advect = function(fs, grid, time, dissipation) {
-        this.grid = grid;
-        this.time = time;
-        this.dissipation = dissipation === undefined ? 0.998 : dissipation;
-
-        this.uniforms = {
-            velocity: {
-                type: "t"
-            },
-            advected: {
-                type: "t"
-            },
-            gridSize: {
-                type: "v2"
-            },
-            gridScale: {
-                type: "f"
-            },
-            timestep: {
-                type: "f"
-            },
-            dissipation: {
-                type: "f"
-            }
-        };
-
-        F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+  constructor(
+    fragmentShader: string,
+    grid: Grid,
+    time: Time,
+    dissipation?: number
+  ) {
+    const uniforms = {
+      velocity: {
+        type: "t",
+      },
+      advected: {
+        type: "t",
+      },
+      gridSize: {
+        type: "v2",
+      },
+      gridScale: {
+        type: "f",
+      },
+      timestep: {
+        type: "f",
+      },
+      dissipation: {
+        type: "f",
+      },
     };
 
-    F2D.Advect.prototype = Object.create(F2D.SlabopBase.prototype);
-    F2D.Advect.prototype.constructor = F2D.Advect;
+    super(fragmentShader, uniforms, grid);
 
-    F2D.Advect.prototype.compute = function(renderer, velocity, advected, output) {
-        this.uniforms.velocity.value = velocity.read;
-        this.uniforms.advected.value = advected.read;
-        this.uniforms.gridSize.value = this.grid.size;
-        this.uniforms.gridScale.value = this.grid.scale;
-        this.uniforms.timestep.value = this.time.step;
-        this.uniforms.dissipation.value = this.dissipation;
+    this.grid = grid;
+    this.time = time;
+    this.dissipation = dissipation === undefined ? 0.998 : dissipation;
+    this.uniforms = uniforms;
+  }
 
-        renderer.render(this.scene, this.camera, output.write, false);
-        output.swap();
-    };
+  compute(renderer: any, velocity: any, advected: any, output: any) {
+    this.uniforms.velocity.value = velocity.read;
+    this.uniforms.advected.value = advected.read;
+    this.uniforms.gridSize.value = this.grid.size;
+    this.uniforms.gridScale.value = this.grid.scale;
+    this.uniforms.timestep.value = this.time.step;
+    this.uniforms.dissipation.value = this.dissipation;
 
-}(F2D));
+    renderer.render(this.scene, this.camera, output.write, false);
+    output.swap();
+  }
+}

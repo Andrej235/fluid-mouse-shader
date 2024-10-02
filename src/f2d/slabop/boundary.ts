@@ -1,10 +1,35 @@
 import * as THREE from "three";
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid } from "../F2D";
 
-(function (F2D) {
-  "use strict";
+export class Boundary {
+  grid: Grid;
+  uniforms: any;
+  lineL: THREE.Line<
+    THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+    THREE.ShaderMaterial,
+    THREE.Object3DEventMap
+  >;
+  lineR: THREE.Line<
+    THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+    THREE.ShaderMaterial,
+    THREE.Object3DEventMap
+  >;
+  lineB: THREE.Line<
+    THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+    THREE.ShaderMaterial,
+    THREE.Object3DEventMap
+  >;
+  lineT: THREE.Line<
+    THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+    THREE.ShaderMaterial,
+    THREE.Object3DEventMap
+  >;
+  camera: THREE.OrthographicCamera;
+  scene: THREE.Scene;
+  gridOffset: THREE.Vector3;
+  material: THREE.ShaderMaterial;
 
-  F2D.Boundary = function (fs, grid) {
+  constructor(fragmentShader: string, grid: Grid) {
     this.grid = grid;
 
     this.uniforms = {
@@ -21,46 +46,33 @@ var F2D = F2D === undefined ? {} : F2D;
         type: "f",
       },
     };
-    var material = new THREE.ShaderMaterial({
+
+    this.material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
-      fragmentShader: fs,
+      fragmentShader,
       depthWrite: false,
       depthTest: false,
       blending: THREE.NoBlending,
     });
-
-    var createLine = function (positions) {
-      var vertices = new Float32Array(positions.length * 3);
-      for (var i = 0; i < positions.length; i++) {
-        vertices[i * 3] = positions[i][0];
-        vertices[i * 3 + 1] = positions[i][1];
-        vertices[i * 3 + 2] = positions[i][2];
-      }
-
-      var geometry = new THREE.BufferGeometry();
-      geometry.addAttribute("position", new THREE.BufferAttribute(vertices, 3));
-
-      return new THREE.Line(geometry, material);
-    };
 
     var ax = (this.grid.size.x - 2) / this.grid.size.x;
     var ay = (this.grid.size.y - 2) / this.grid.size.y;
     var bx = (this.grid.size.x - 1) / this.grid.size.x;
     var by = (this.grid.size.y - 1) / this.grid.size.y;
 
-    this.lineL = createLine([
+    this.lineL = this.createLine([
       [-ax, -ay, 0],
       [-bx, by, 0],
     ]);
-    this.lineR = createLine([
+    this.lineR = this.createLine([
       [ax, -ay, 0],
       [bx, by, 0],
     ]);
-    this.lineB = createLine([
+    this.lineB = this.createLine([
       [-ax, -ay, 0],
       [bx, -by, 0],
     ]);
-    this.lineT = createLine([
+    this.lineT = this.createLine([
       [-ax, ay, 0],
       [bx, by, 0],
     ]);
@@ -69,32 +81,48 @@ var F2D = F2D === undefined ? {} : F2D;
     this.scene = new THREE.Scene();
 
     this.gridOffset = new THREE.Vector3();
-  };
+  }
 
-  F2D.Boundary.prototype = {
-    constructor: F2D.Boundary,
+  createLine(positions: [x: number, y: number, z: number][]) {
+    var vertices = new Float32Array(positions.length * 3);
 
-    compute: function (renderer, input, scale, output) {
-      if (!this.grid.applyBoundaries) return;
+    for (var i = 0; i < positions.length; i++) {
+      vertices[i * 3] = positions[i][0];
+      vertices[i * 3 + 1] = positions[i][1];
+      vertices[i * 3 + 2] = positions[i][2];
+    }
 
-      this.uniforms.read.value = input.read;
-      this.uniforms.gridSize.value = this.grid.size;
-      this.uniforms.scale.value = scale;
+    var geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 
-      this.renderLine(renderer, this.lineL, [1, 0], output);
-      this.renderLine(renderer, this.lineR, [-1, 0], output);
-      this.renderLine(renderer, this.lineB, [0, 1], output);
-      this.renderLine(renderer, this.lineT, [0, -1], output);
-    },
+    return new THREE.Line(geometry, this.material);
+  }
 
-    renderLine: function (renderer, line, offset, output) {
-      this.scene.add(line);
-      this.gridOffset.set(offset[0], offset[1]);
-      this.uniforms.gridOffset.value = this.gridOffset;
-      renderer.render(this.scene, this.camera, output.write, false);
-      this.scene.remove(line);
-      // we do not swap output, the next slab operation will fill in the
-      // iterior and swap it
-    },
-  };
-})(F2D);
+  renderLine(
+    renderer: any,
+    line: THREE.Line,
+    offset: [number, number],
+    output: any
+  ) {
+    this.scene.add(line);
+    this.gridOffset.set(offset[0], offset[1], 0);
+    this.uniforms.gridOffset.value = this.gridOffset;
+    renderer.render(this.scene, this.camera, output.write, false);
+    this.scene.remove(line);
+    // we do not swap output, the next slab operation will fill in the
+    // iterior and swap it
+  }
+
+  compute(renderer: any, input: any, scale: any, output: any) {
+    if (!this.grid.applyBoundaries) return;
+
+    this.uniforms.read.value = input.read;
+    this.uniforms.gridSize.value = this.grid.size;
+    this.uniforms.scale.value = scale;
+
+    this.renderLine(renderer, this.lineL, [1, 0], output);
+    this.renderLine(renderer, this.lineR, [-1, 0], output);
+    this.renderLine(renderer, this.lineB, [0, 1], output);
+    this.renderLine(renderer, this.lineT, [0, -1], output);
+  }
+}

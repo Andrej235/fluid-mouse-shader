@@ -1,36 +1,35 @@
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid } from "../F2D";
+import SlabopBase from "./slabopbase";
 
-(function(F2D) {
-    "use strict";
+export default class Vorticity extends SlabopBase {
+  grid: Grid;
+  uniforms: any;
 
-    F2D.Vorticity = function(fs, grid) {
-        this.grid = grid;
-
-        this.uniforms = {
-            velocity: {
-                type: "t"
-            },
-            gridSize: {
-                type: "v2"
-            },
-            gridScale: {
-                type: "f"
-            },
-        };
-
-        F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+  constructor(fragmentShader: string, grid: Grid) {
+    const uniforms = {
+      velocity: {
+        type: "t",
+      },
+      gridSize: {
+        type: "v2",
+      },
+      gridScale: {
+        type: "f",
+      },
     };
 
-    F2D.Vorticity.prototype = Object.create(F2D.SlabopBase.prototype);
-    F2D.Vorticity.prototype.constructor = F2D.Vorticity;
+    super(fragmentShader, uniforms, grid);
 
-    F2D.Vorticity.prototype.compute = function(renderer, velocity, output) {
-        this.uniforms.velocity.value = velocity.read;
-        this.uniforms.gridSize.value = this.grid.size;
-        this.uniforms.gridScale.value = this.grid.scale;
+    this.grid = grid;
+    this.uniforms = uniforms;
+  }
 
-        renderer.render(this.scene, this.camera, output.write, false);
-        output.swap();
-    };
+  compute(renderer: any, velocity: any, output: any) {
+    this.uniforms.velocity.value = velocity.read;
+    this.uniforms.gridSize.value = this.grid.size;
+    this.uniforms.gridScale.value = this.grid.scale;
 
-}(F2D));
+    renderer.render(this.scene, this.camera, output.write, false);
+    output.swap();
+  }
+}

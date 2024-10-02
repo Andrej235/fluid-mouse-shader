@@ -1,29 +1,33 @@
 import * as THREE from "three";
-var F2D = F2D === undefined ? {} : F2D;
+import { Grid } from "../F2D";
 
-(function (F2D) {
-  "use strict";
+export default class SlabopBase {
+  camera: THREE.OrthographicCamera;
+  scene: THREE.Scene;
 
-  F2D.SlabopBase = function (fs, uniforms, grid) {
-    var geometry = new THREE.PlaneBufferGeometry(
+  constructor(
+    fragmentShader: string,
+    uniforms: any, // TODO: type this
+    grid: Grid
+  ) {
+    console.log(grid);
+
+    var geometry = new THREE.PlaneGeometry(
       (2 * (grid.size.x - 2)) / grid.size.x,
       (2 * (grid.size.y - 2)) / grid.size.y
     );
     var material = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      fragmentShader: fs,
+      uniforms,
+      fragmentShader: fragmentShader,
       depthWrite: false,
       depthTest: false,
       blending: THREE.NoBlending,
     });
+
     var quad = new THREE.Mesh(geometry, material);
 
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.scene = new THREE.Scene();
     this.scene.add(quad);
-  };
-
-  F2D.SlabopBase.prototype = {
-    constructor: F2D.SlabopBase,
-  };
-})(F2D);
+  }
+}
