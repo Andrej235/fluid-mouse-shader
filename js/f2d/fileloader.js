@@ -4,26 +4,23 @@ var F2D = F2D === undefined ? {} : F2D;
 // file has been loaded with its response text.
 // Construct a file loader with a suffix path that is prepended to all
 // names.
-F2D.FileLoader = function (path, names) {
-  this.path = path;
-  this.queue = [];
-  for (var i = 0; i < names.length; i++) {
-    var name = names[i];
-    var url = path + "/" + name;
-    var file = {
-      name: name,
-      url: url,
-    };
-    this.queue.push(file);
+F2D.FileLoader = class {
+  constructor(path, names) {
+    this.path = path;
+    this.queue = [];
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      var url = path + "/" + name;
+      var file = {
+        name: name,
+        url: url,
+      };
+      this.queue.push(file);
+    }
   }
-};
-
-F2D.FileLoader.prototype = {
-  constructor: F2D.FileLoader,
-
   // Load all files currently in the queue, calls onDone when all files
   // has been downloaded.
-  run: function (onDone) {
+  run(onDone) {
     var files = {};
     var filesRemaining = this.queue.length;
 
@@ -51,5 +48,5 @@ F2D.FileLoader.prototype = {
       loadFile(this.queue[i]);
     }
     this.queue = [];
-  },
+  }
 };

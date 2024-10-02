@@ -1,18 +1,18 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Slab = function (width, height, options) {
-  this.read = new THREE.WebGLRenderTarget(width, height, options);
-  this.write = this.read.clone();
-};
-
-F2D.Slab.prototype = {
-  constructor: F2D.Slab,
-
-  swap: function () {
+F2D.Slab = class {
+  constructor(width, height, options) {
+    this.read = new THREE.WebGLRenderTarget(width, height, options);
+    this.write = this.read.clone();
+  }
+  swap() {
     var tmp = this.read;
     this.read = this.write;
     this.write = tmp;
-  },
+  }
+  static make(width, height) {
+    return new F2D.Slab(width, height, options);
+  }
 };
 
 var options = {
@@ -26,8 +26,4 @@ var options = {
   stencilBuffer: false,
   generateMipmaps: false,
   shareDepthFrom: null,
-};
-
-F2D.Slab.make = function (width, height) {
-  return new F2D.Slab(width, height, options);
 };

@@ -1,35 +1,34 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Mouse = function (grid) {
-  this.grid = grid;
+F2D.Mouse = class {
+  constructor(grid) {
+    this.grid = grid;
 
-  this.left = false;
-  this.right = false;
-  this.position = new THREE.Vector2();
-  this.motions = [];
+    this.left = false;
+    this.right = false;
+    this.position = new THREE.Vector2();
+    this.motions = [];
 
-  document.addEventListener("mousedown", this.mouseDown.bind(this), false);
-  document.addEventListener("mouseup", this.mouseUp.bind(this), false);
-  document.addEventListener("mousemove", this.mouseMove.bind(this), false);
-  document.addEventListener("contextmenu", this.contextMenu.bind(this), false);
-};
-
-F2D.Mouse.prototype = {
-  constructor: F2D.Mouse,
-
-  mouseDown: function (event) {
+    document.addEventListener("mousedown", this.mouseDown.bind(this), false);
+    document.addEventListener("mouseup", this.mouseUp.bind(this), false);
+    document.addEventListener("mousemove", this.mouseMove.bind(this), false);
+    document.addEventListener(
+      "contextmenu",
+      this.contextMenu.bind(this),
+      false
+    );
+  }
+  mouseDown(event) {
     this.position.set(event.clientX, event.clientY);
     this.left = event.button === 0 ? true : this.left;
     this.right = event.button === 2 ? true : this.right;
-  },
-
-  mouseUp: function (event) {
+  }
+  mouseUp(event) {
     event.preventDefault();
     this.left = event.button === 0 ? false : this.left;
     this.right = event.button === 2 ? false : this.right;
-  },
-
-  mouseMove: function (event) {
+  }
+  mouseMove(event) {
     event.preventDefault();
     var r = this.grid.scale;
 
@@ -59,9 +58,8 @@ F2D.Mouse.prototype = {
     }
 
     this.position.set(x, y);
-  },
-
-  contextMenu: function (event) {
+  }
+  contextMenu(event) {
     event.preventDefault();
-  },
+  }
 };
