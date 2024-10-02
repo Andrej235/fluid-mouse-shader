@@ -5,11 +5,7 @@ export default class SlabopBase {
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
 
-  constructor(
-    fragmentShader: string,
-    uniforms: any, // TODO: type this
-    grid: Grid
-  ) {
+  constructor(fragmentShader: string, uniforms: any, grid: Grid) {
     console.log(grid);
 
     var geometry = new THREE.PlaneGeometry(

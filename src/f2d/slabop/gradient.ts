@@ -1,5 +1,7 @@
+import { WebGLRenderer } from "three";
 import { Grid } from "../F2D";
 import SlabopBase from "./slabopbase";
+import Slab from "../slab";
 
 // TODO: type this
 export default class Gradient extends SlabopBase {
@@ -27,13 +29,13 @@ export default class Gradient extends SlabopBase {
     this.grid = grid;
   }
 
-  compute(renderer: any, p: any, w: any, output: any) {
+  compute(renderer: WebGLRenderer, p: Slab, w: Slab, output: Slab) {
     this.uniforms.p.value = p.read;
     this.uniforms.w.value = w.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera);
     output.swap();
   }
 }

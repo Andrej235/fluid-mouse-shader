@@ -16,11 +16,11 @@ export default class Solver {
   time: Time;
   windowSize: THREE.Vector2;
 
-  velocity: any; //TODO: type this
-  density: any;
-  velocityDivergence: any;
-  velocityVorticity: any;
-  pressure: any;
+  velocity: Slab;
+  density: Slab;
+  velocityDivergence: Slab;
+  velocityVorticity: Slab;
+  pressure: Slab;
 
   advect: Advect;
   diffuse: Jacobi;
@@ -83,7 +83,7 @@ export default class Solver {
     var temp = this.advect.dissipation;
     this.advect.dissipation = 1;
     this.advect.compute(renderer, this.velocity, this.velocity, this.velocity);
-    this.boundary.compute(renderer, this.velocity, -1, this.velocity);
+    this.boundary.compute(renderer, this.velocity, -1);
 
     this.advect.dissipation = temp;
     this.advect.compute(renderer, this.velocity, this.density, this.density);
@@ -98,13 +98,13 @@ export default class Solver {
         this.velocityVorticity,
         this.velocity
       );
-      this.boundary.compute(renderer, this.velocity, -1, this.velocity);
+      this.boundary.compute(renderer, this.velocity, -1);
     }
 
     if (this.applyViscosity && this.viscosity > 0) {
-      var s = this.grid.scale;
+      var scale = this.grid.scale;
 
-      this.diffuse.alpha = (s * s) / (this.viscosity * this.time.step);
+      this.diffuse.alpha = (scale * scale) / (this.viscosity * this.time.step);
       this.diffuse.beta = 4 + this.diffuse.alpha;
       this.diffuse.compute(
         renderer,
@@ -140,7 +140,7 @@ export default class Solver {
           point,
           this.velocity
         );
-        this.boundary.compute(renderer, this.velocity, -1, this.velocity);
+        this.boundary.compute(renderer, this.velocity, -1);
       }
 
       if (motion.right) {
@@ -179,7 +179,7 @@ export default class Solver {
       this.velocity,
       this.velocity
     );
-    this.boundary.compute(renderer, this.velocity, -1, this.velocity);
+    this.boundary.compute(renderer, this.velocity, -1);
   }
 
   clearSlab(renderer: THREE.WebGLRenderer, slab: Slab) {

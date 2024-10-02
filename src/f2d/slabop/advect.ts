@@ -1,5 +1,7 @@
 import { Grid, Time } from "../F2D";
+import Slab from "../slab";
 import SlabopBase from "./slabopbase";
+import * as THREE from "three";
 
 export default class Advect extends SlabopBase {
   grid: Grid;
@@ -42,7 +44,12 @@ export default class Advect extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer: any, velocity: any, advected: any, output: any) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    velocity: Slab,
+    advected: Slab,
+    output: Slab
+  ) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.advected.value = advected.read;
     this.uniforms.gridSize.value = this.grid.size;
@@ -50,7 +57,7 @@ export default class Advect extends SlabopBase {
     this.uniforms.timestep.value = this.time.step;
     this.uniforms.dissipation.value = this.dissipation;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera /* output.write, false */);
     output.swap();
   }
 }

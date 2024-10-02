@@ -1,5 +1,7 @@
+import { WebGLRenderer } from "three";
 import { Grid } from "../F2D";
 import SlabopBase from "./slabopbase";
+import Slab from "../slab";
 
 export default class Vorticity extends SlabopBase {
   grid: Grid;
@@ -24,12 +26,12 @@ export default class Vorticity extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer: any, velocity: any, output: any) {
+  compute(renderer: WebGLRenderer, velocity: Slab, output: Slab) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera);
     output.swap();
   }
 }

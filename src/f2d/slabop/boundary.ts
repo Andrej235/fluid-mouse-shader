@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Grid } from "../F2D";
+import Slab from "../slab";
 
 export class Boundary {
   grid: Grid;
@@ -99,30 +100,29 @@ export class Boundary {
   }
 
   renderLine(
-    renderer: any,
+    renderer: THREE.WebGLRenderer,
     line: THREE.Line,
-    offset: [number, number],
-    output: any
+    offset: [number, number]
   ) {
     this.scene.add(line);
     this.gridOffset.set(offset[0], offset[1], 0);
     this.uniforms.gridOffset.value = this.gridOffset;
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera /* , output.write, false */);
     this.scene.remove(line);
     // we do not swap output, the next slab operation will fill in the
     // iterior and swap it
   }
 
-  compute(renderer: any, input: any, scale: any, output: any) {
+  compute(renderer: THREE.WebGLRenderer, input: Slab, scale: number) {
     if (!this.grid.applyBoundaries) return;
 
     this.uniforms.read.value = input.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.scale.value = scale;
 
-    this.renderLine(renderer, this.lineL, [1, 0], output);
-    this.renderLine(renderer, this.lineR, [-1, 0], output);
-    this.renderLine(renderer, this.lineB, [0, 1], output);
-    this.renderLine(renderer, this.lineT, [0, -1], output);
+    this.renderLine(renderer, this.lineL, [1, 0]);
+    this.renderLine(renderer, this.lineR, [-1, 0]);
+    this.renderLine(renderer, this.lineB, [0, 1]);
+    this.renderLine(renderer, this.lineT, [0, -1]);
   }
 }

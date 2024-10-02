@@ -1,4 +1,7 @@
+import { WebGLRenderer } from "three";
 import { Grid } from "../F2D";
+import Slab from "../slab";
+import { Boundary } from "./boundary";
 import SlabopBase from "./slabopbase";
 
 export default class Jacobi extends SlabopBase {
@@ -43,27 +46,27 @@ export default class Jacobi extends SlabopBase {
   }
 
   compute(
-    renderer: any,
-    x: any,
-    b: any,
-    output: any,
-    boundary: any,
-    scale: any
+    renderer: WebGLRenderer,
+    x: Slab,
+    b: Slab,
+    output: Slab,
+    boundary: Boundary,
+    scale: number
   ) {
     for (var i = 0; i < this.iterations; i++) {
       this.step(renderer, x, b, output);
-      boundary.compute(renderer, output, scale, output);
+      boundary.compute(renderer, output, scale);
     }
   }
 
-  step(renderer: any, x: any, b: any, output: any) {
+  step(renderer: WebGLRenderer, x: Slab, b: Slab, output: Slab) {
     this.uniforms.x.value = x.read;
     this.uniforms.b.value = b.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.alpha.value = this.alpha;
     this.uniforms.beta.value = this.beta;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera);
     output.swap();
   }
 }

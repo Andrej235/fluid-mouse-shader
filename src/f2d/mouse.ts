@@ -6,7 +6,18 @@ export default class Mouse {
   left: boolean;
   right: boolean;
   position: THREE.Vector2;
-  motions: any[];
+  motions: {
+    left: boolean;
+    right: boolean;
+    drag: {
+      x: number;
+      y: number;
+    };
+    position: {
+      x: number;
+      y: number;
+    };
+  }[];
 
   constructor(grid: Grid) {
     this.grid = grid;

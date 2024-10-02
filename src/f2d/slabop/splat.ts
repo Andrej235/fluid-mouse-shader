@@ -1,5 +1,7 @@
 import { Grid } from "../F2D";
+import Slab from "../slab";
 import SlabopBase from "./slabopbase";
+import * as THREE from "three";
 
 // TODO: type this
 export default class Splat extends SlabopBase {
@@ -32,14 +34,20 @@ export default class Splat extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer: any, input: any, color: any, point: any, output: any) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    input: Slab,
+    color: THREE.Vector3,
+    point: THREE.Vector2,
+    output: Slab
+  ) {
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.read.value = input.read;
     this.uniforms.color.value = color;
     this.uniforms.point.value = point;
     this.uniforms.radius.value = this.radius;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.render(this.scene, this.camera /* , output.write, false */);
     output.swap();
   }
 }

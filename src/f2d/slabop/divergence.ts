@@ -1,5 +1,7 @@
+import { WebGLRenderer } from "three";
 import { Grid } from "../F2D";
 import SlabopBase from "./slabopbase";
+import Slab from "../slab";
 
 // TODO: type this
 export default class Divergence extends SlabopBase {
@@ -25,12 +27,12 @@ export default class Divergence extends SlabopBase {
   }
 
   //TODO: type this
-  compute(renderer: any, velocity: any, divergence: any) {
+  compute(renderer: WebGLRenderer, velocity: Slab, divergence: Slab) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, divergence.write, false);
+    renderer.render(this.scene, this.camera);
     divergence.swap();
   }
 }

@@ -39,7 +39,7 @@ var solver: Solver;
 var gui: dat.GUI;
 var mouse = new Mouse(grid);
 
-function init(shaders: any) {
+function init(shaders: Record<string, string>) {
   solver = Solver.make(grid, time, windowSize, shaders);
 
   displayScalar = new Display(shaders.basic, shaders.displayscalar);

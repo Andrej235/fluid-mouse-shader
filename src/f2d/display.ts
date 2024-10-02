@@ -57,7 +57,10 @@ export default class Display {
   }
 
   //TODO: Type this
-  render(renderer: THREE.WebGLRenderer, read: any) {
+  render(
+    renderer: THREE.WebGLRenderer,
+    read: THREE.WebGLRenderTarget<THREE.Texture>
+  ) {
     this.uniforms.read.value = read;
     this.uniforms.bias.value = this.bias;
     this.uniforms.scale.value = this.scale;
