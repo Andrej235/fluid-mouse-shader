@@ -1,12 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Advect = class {
+F2D.Advect = class extends F2D.SlabopBase {
   constructor(fs, grid, time, dissipation) {
-    this.grid = grid;
-    this.time = time;
-    this.dissipation = dissipation === undefined ? 0.998 : dissipation;
-
-    this.uniforms = {
+    var uniforms = {
       velocity: {
         type: "t",
       },
@@ -27,7 +23,13 @@ F2D.Advect = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+
+    this.grid = grid;
+    this.time = time;
+    this.dissipation = dissipation === undefined ? 0.998 : dissipation;
+
+    this.uniforms = uniforms;
   }
   compute(renderer, velocity, advected, output) {
     this.uniforms.velocity.value = velocity.read;

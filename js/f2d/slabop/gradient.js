@@ -1,10 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Gradient = class {
+F2D.Gradient = class extends F2D.SlabopBase {
   constructor(fs, grid) {
-    this.grid = grid;
-
-    this.uniforms = {
+    var uniforms = {
       p: {
         type: "t",
       },
@@ -19,7 +17,10 @@ F2D.Gradient = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+
+    this.grid = grid;
+    this.uniforms = uniforms;
   }
   compute(renderer, p, w, output) {
     this.uniforms.p.value = p.read;

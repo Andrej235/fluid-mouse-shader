@@ -1,13 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.VorticityConfinement = class {
+F2D.VorticityConfinement = class extends F2D.SlabopBase {
   constructor(fs, grid, time, epsilon, curl) {
-    this.grid = grid;
-    this.time = time;
-    this.epsilon = epsilon === undefined ? 2.4414e-4 : epsilon;
-    this.curl = curl === undefined ? 0.3 : curl;
-
-    this.uniforms = {
+    var uniforms = {
       velocity: {
         type: "t",
       },
@@ -32,7 +27,13 @@ F2D.VorticityConfinement = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+
+    this.grid = grid;
+    this.time = time;
+    this.epsilon = epsilon === undefined ? 2.4414e-4 : epsilon;
+    this.curl = curl === undefined ? 0.3 : curl;
+    this.uniforms = uniforms;
   }
   compute(renderer, velocity, vorticity, output) {
     this.uniforms.velocity.value = velocity.read;

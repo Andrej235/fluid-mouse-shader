@@ -1,10 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Divergence = class {
+F2D.Divergence = class extends F2D.SlabopBase {
   constructor(fs, grid) {
-    this.grid = grid;
-
-    this.uniforms = {
+    var uniforms = {
       velocity: {
         type: "t",
       },
@@ -16,7 +14,10 @@ F2D.Divergence = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+
+    this.grid = grid;
+    this.uniforms = uniforms;
   }
   compute(renderer, velocity, divergence) {
     this.uniforms.velocity.value = velocity.read;

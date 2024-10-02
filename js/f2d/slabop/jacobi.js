@@ -1,13 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Jacobi = class {
+F2D.Jacobi = class extends F2D.SlabopBase {
   constructor(fs, grid, iterations, alpha, beta) {
-    this.grid = grid;
-    this.iterations = iterations === undefined ? 50 : iterations;
-    this.alpha = alpha === undefined ? -1 : alpha;
-    this.beta = beta === undefined ? 4 : beta;
-
-    this.uniforms = {
+    var uniforms = {
       x: {
         type: "t",
       },
@@ -25,7 +20,13 @@ F2D.Jacobi = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+    this.grid = grid;
+    this.iterations = iterations === undefined ? 50 : iterations;
+    this.alpha = alpha === undefined ? -1 : alpha;
+    this.beta = beta === undefined ? 4 : beta;
+
+    this.uniforms = uniforms;
   }
   compute(renderer, x, b, output, boundary, scale) {
     for (var i = 0; i < this.iterations; i++) {

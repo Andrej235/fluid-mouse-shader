@@ -1,11 +1,8 @@
 var F2D = F2D === undefined ? {} : F2D;
 
-F2D.Splat = class {
+F2D.Splat = class extends F2D.SlabopBase {
   constructor(fs, grid, radius) {
-    this.grid = grid;
-    this.radius = radius === undefined ? 0.01 : radius;
-
-    this.uniforms = {
+    var uniforms = {
       read: {
         type: "t",
       },
@@ -23,7 +20,11 @@ F2D.Splat = class {
       },
     };
 
-    F2D.SlabopBase.call(this, fs, this.uniforms, grid);
+    super(fs, uniforms, grid);
+
+    this.grid = grid;
+    this.radius = radius === undefined ? 0.01 : radius;
+    this.uniforms = uniforms;
   }
   compute(renderer, input, color, point, output) {
     this.uniforms.gridSize.value = this.grid.size;
