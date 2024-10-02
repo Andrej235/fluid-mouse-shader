@@ -24,7 +24,7 @@ export default class Display {
       depthTest: false,
       blending: THREE.NoBlending,
     });
-    var quad = new THREE.Mesh(
+    let quad = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(2, 2),
       this.material
     );
@@ -35,7 +35,7 @@ export default class Display {
   }
   // set bias and scale for including range of negative values
   scaleNegative() {
-    var v = 0.5;
+    let v = 0.5;
     this.bias.set(v, v, v);
     this.scale.set(v, v, v);
   }

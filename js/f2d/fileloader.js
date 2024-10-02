@@ -8,10 +8,10 @@ export default class FileLoader {
   constructor(path, names) {
     this.path = path;
     this.queue = [];
-    for (var i = 0; i < names.length; i++) {
-      var name = names[i];
-      var url = path + "/" + name;
-      var file = {
+    for (let i = 0; i < names.length; i++) {
+      let name = names[i];
+      let url = path + "/" + name;
+      let file = {
         name: name,
         url: url,
       };
@@ -21,10 +21,10 @@ export default class FileLoader {
   // Load all files currently in the queue, calls onDone when all files
   // has been downloaded.
   run(onDone) {
-    var files = {};
-    var filesRemaining = this.queue.length;
+    let files = {};
+    let filesRemaining = this.queue.length;
 
-    var fileLoaded = function (file) {
+    let fileLoaded = function (file) {
       files[file.name] = file.text;
       filesRemaining--;
       if (filesRemaining === 0) {
@@ -32,8 +32,8 @@ export default class FileLoader {
       }
     };
 
-    var loadFile = function (file) {
-      var request = new XMLHttpRequest();
+    let loadFile = function (file) {
+      let request = new XMLHttpRequest();
       request.onload = function () {
         if (request.status === 200) {
           file.text = request.responseText;
@@ -44,7 +44,7 @@ export default class FileLoader {
       request.send();
     };
 
-    for (var i = 0; i < this.queue.length; i++) {
+    for (let i = 0; i < this.queue.length; i++) {
       loadFile(this.queue[i]);
     }
     this.queue = [];

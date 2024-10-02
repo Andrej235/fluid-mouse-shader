@@ -30,21 +30,21 @@ export default class Mouse {
   }
   mouseMove(event) {
     event.preventDefault();
-    var r = this.grid.scale;
+    let r = this.grid.scale;
 
-    var x = event.clientX;
-    var y = event.clientY;
+    let x = event.clientX;
+    let y = event.clientY;
 
     if (this.left || this.right) {
-      var dx = x - this.position.x;
-      var dy = y - this.position.y;
+      let dx = x - this.position.x;
+      let dy = y - this.position.y;
 
-      var drag = {
+      let drag = {
         x: Math.min(Math.max(dx, -r), r),
         y: Math.min(Math.max(dy, -r), r),
       };
 
-      var position = {
+      let position = {
         x: x,
         y: y,
       };

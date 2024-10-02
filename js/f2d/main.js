@@ -5,9 +5,9 @@ import Solver from "./solver";
 import Display from "./display";
 import FileLoader from "./fileloader";
 
-var windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
+let windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
-var renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer();
 renderer.autoClear = false;
 renderer.sortObjects = false;
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -15,20 +15,20 @@ renderer.setSize(windowSize.x, windowSize.y);
 renderer.setClearColor(0x00ff00);
 document.body.appendChild(renderer.domElement);
 
-var grid = {
+let grid = {
   size: new THREE.Vector2(512, 256),
   scale: 1,
   applyBoundaries: true,
 };
-var time = {
+let time = {
   step: 1,
 };
-var displayScalar, displayVector;
-var displaySettings = {
+let displayScalar, displayVector;
+let displaySettings = {
   slab: "density",
 };
-var solver, gui;
-var mouse = new Mouse(grid);
+let solver, gui;
+let mouse = new Mouse(grid);
 
 function init(shaders) {
   solver = Solver.make(grid, time, windowSize, shaders);
@@ -45,7 +45,7 @@ function init(shaders) {
   ]);
   gui.add(time, "step").min(0).step(0.01);
 
-  var advectFolder = gui.addFolder("Advect");
+  let advectFolder = gui.addFolder("Advect");
   advectFolder.add(solver.advect, "dissipation", {
     none: 1,
     slow: 0.998,
@@ -53,15 +53,15 @@ function init(shaders) {
     "very fast": 0.9,
   });
 
-  var viscosityFolder = gui.addFolder("Viscosity");
+  let viscosityFolder = gui.addFolder("Viscosity");
   viscosityFolder.add(solver, "applyViscosity");
   viscosityFolder.add(solver, "viscosity").min(0).step(0.01);
 
-  var vorticityFolder = gui.addFolder("Vorticity");
+  let vorticityFolder = gui.addFolder("Vorticity");
   vorticityFolder.add(solver, "applyVorticity");
   vorticityFolder.add(solver.vorticityConfinement, "curl").min(0).step(0.01);
 
-  var poissonPressureEqFolder = gui.addFolder("Poisson Pressure Equation");
+  let poissonPressureEqFolder = gui.addFolder("Poisson Pressure Equation");
   poissonPressureEqFolder.add(
     solver.poissonPressureEq,
     "iterations",
@@ -73,16 +73,16 @@ function init(shaders) {
   // we need a splat color "adapter" since we want values between 0 and
   // 1 but also since dat.GUI requires a JavaScript array over a Three.js
   // vector
-  var splatSettings = {
+  let splatSettings = {
     color: [solver.ink.x * 255, solver.ink.y * 255, solver.ink.z * 255],
   };
-  var splatFolder = gui.addFolder("Splat");
+  let splatFolder = gui.addFolder("Splat");
   splatFolder.add(solver.splat, "radius").min(0);
   splatFolder.addColor(splatSettings, "color").onChange(function (value) {
     solver.ink.set(value[0] / 255, value[1] / 255, value[2] / 255);
   });
 
-  var gridFolder = gui.addFolder("Grid");
+  let gridFolder = gui.addFolder("Grid");
   gridFolder.add(grid, "applyBoundaries");
   gridFolder.add(grid, "scale");
 
@@ -96,7 +96,7 @@ function update() {
 }
 
 function render() {
-  var display, read;
+  let display, read;
   switch (displaySettings.slab) {
     case "velocity":
       display = displayVector;
@@ -129,7 +129,7 @@ function resize() {
 }
 window.onresize = resize;
 
-var loader = new FileLoader("shaders", [
+let loader = new FileLoader("shaders", [
   "advect.fs",
   "basic.vs",
   "gradient.fs",
@@ -145,8 +145,8 @@ var loader = new FileLoader("shaders", [
 ]);
 loader.run(function (files) {
   // remove file extension before passing shaders to init
-  var shaders = {};
-  for (var name in files) {
+  let shaders = {};
+  for (let name in files) {
     shaders[name.split(".")[0]] = files[name];
   }
   init(shaders);
