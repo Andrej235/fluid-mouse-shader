@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
 
-class Advect extends F2D.SlabopBase {
+class Advect extends SlabopBase {
   constructor(fs, grid, time, dissipation = 0.998) {
     const uniforms = {
       velocity: { type: "t" },
@@ -32,4 +32,4 @@ class Advect extends F2D.SlabopBase {
   }
 }
 
-F2D.Advect = Advect;
+export default Advect;

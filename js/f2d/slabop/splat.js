@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
 
-class Splat extends F2D.SlabopBase {
+class Splat extends SlabopBase {
   constructor(fs, grid, radius = 0.01) {
     const uniforms = {
       read: { type: "t" },
@@ -29,4 +29,4 @@ class Splat extends F2D.SlabopBase {
   }
 }
 
-F2D.Splat = Splat;
+export default Splat

@@ -1,10 +1,10 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
 // Loads arbitrary number of files in a batch and gives a callback when every
 // file has been loaded with its response text.
 // Construct a file loader with a suffix path that is prepended to all
 // names.
-F2D.FileLoader = class {
+export default class FileLoader {
   constructor(path, names) {
     this.path = path;
     this.queue = [];
@@ -49,4 +49,4 @@ F2D.FileLoader = class {
     }
     this.queue = [];
   }
-};
+}

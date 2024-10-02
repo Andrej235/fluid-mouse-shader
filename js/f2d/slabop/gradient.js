@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
 
-class Gradient extends F2D.SlabopBase {
+class Gradient extends SlabopBase {
   constructor(fs, grid) {
     const uniforms = {
       p: { type: "t" },
@@ -26,4 +26,4 @@ class Gradient extends F2D.SlabopBase {
   }
 }
 
-F2D.Gradient = Gradient;
+export default Gradient;

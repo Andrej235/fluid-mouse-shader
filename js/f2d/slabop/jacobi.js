@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
 
-class Jacobi extends F2D.SlabopBase {
+class Jacobi extends SlabopBase {
   constructor(fs, grid, iterations = 50, alpha = -1, beta = 4) {
     const uniforms = {
       x: { type: "t" },
@@ -38,4 +38,4 @@ class Jacobi extends F2D.SlabopBase {
   }
 }
 
-F2D.Jacobi = Jacobi;
+export default Jacobi;

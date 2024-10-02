@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
-F2D.Slab = class {
+export default class Slab {
   constructor(width, height, options) {
     this.read = new THREE.WebGLRenderTarget(width, height, options);
     this.write = this.read.clone();
@@ -11,9 +11,9 @@ F2D.Slab = class {
     this.write = tmp;
   }
   static make(width, height) {
-    return new F2D.Slab(width, height, options);
+    return new Slab(width, height, options);
   }
-};
+}
 
 var options = {
   wrapS: THREE.ClampToEdgeWrapping,

@@ -1,4 +1,13 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
+import Slab from "./slab";
+import Boundary from "./slabop/boundary";
+import Advect from "./slabop/advect";
+import Divergence from "./slabop/divergence";
+import Gradient from "./slabop/gradient";
+import Splat from "./slabop/splat";
+import Vorticity from "./slabop/vorticity";
+import VorticityConfinement from "./slabop/vorticityconfinement";
+import Jacobi from "./slabop/jacobi";
 
 class Solver {
   constructor(grid, time, windowSize, slabs, slabop) {
@@ -148,32 +157,32 @@ class Solver {
 
     const slabs = {
       // vec2
-      velocity: F2D.Slab.make(w, h),
+      velocity: Slab.make(w, h),
       // scalar
-      density: F2D.Slab.make(w, h),
-      velocityDivergence: F2D.Slab.make(w, h),
-      velocityVorticity: F2D.Slab.make(w, h),
-      pressure: F2D.Slab.make(w, h),
+      density: Slab.make(w, h),
+      velocityDivergence: Slab.make(w, h),
+      velocityVorticity: Slab.make(w, h),
+      pressure: Slab.make(w, h),
     };
 
     const slabop = {
-      advect: new F2D.Advect(shaders.advect, grid, time),
-      diffuse: new F2D.Jacobi(shaders.jacobivector, grid),
-      divergence: new F2D.Divergence(shaders.divergence, grid),
-      poissonPressureEq: new F2D.Jacobi(shaders.jacobiscalar, grid),
-      gradient: new F2D.Gradient(shaders.gradient, grid),
-      splat: new F2D.Splat(shaders.splat, grid),
-      vorticity: new F2D.Vorticity(shaders.vorticity, grid),
-      vorticityConfinement: new F2D.VorticityConfinement(
+      advect: new Advect(shaders.advect, grid, time),
+      diffuse: new Jacobi(shaders.jacobivector, grid),
+      divergence: new Divergence(shaders.divergence, grid),
+      poissonPressureEq: new Jacobi(shaders.jacobiscalar, grid),
+      gradient: new Gradient(shaders.gradient, grid),
+      splat: new Splat(shaders.splat, grid),
+      vorticity: new Vorticity(shaders.vorticity, grid),
+      vorticityConfinement: new VorticityConfinement(
         shaders.vorticityforce,
         grid,
         time
       ),
-      boundary: new F2D.Boundary(shaders.boundary, grid),
+      boundary: new Boundary(shaders.boundary, grid),
     };
 
     return new Solver(grid, time, windowSize, slabs, slabop);
   }
 }
 
-F2D.Solver = Solver;
+export default Solver;

@@ -1,4 +1,4 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
 class Boundary {
   constructor(fs, grid) {
@@ -83,4 +83,4 @@ class Boundary {
   }
 }
 
-F2D.Boundary = Boundary;
+export default Boundary

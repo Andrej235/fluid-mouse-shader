@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import SlabopBase from "./slabopbase";
 
-class Divergence extends F2D.SlabopBase {
+class Divergence extends SlabopBase {
   constructor(fs, grid) {
     const uniforms = {
       velocity: { type: "t" },
@@ -24,4 +24,4 @@ class Divergence extends F2D.SlabopBase {
   }
 }
 
-F2D.Divergence = Divergence;
+export default Divergence;

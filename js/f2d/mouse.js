@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
-F2D.Mouse = class {
+export default class Mouse {
   constructor(grid) {
     this.grid = grid;
 
@@ -62,4 +62,4 @@ F2D.Mouse = class {
   contextMenu(event) {
     event.preventDefault();
   }
-};
+}

@@ -1,3 +1,10 @@
+import * as THREE from "three";
+import * as dat from "dat.gui";
+import Mouse from "./mouse";
+import Solver from "./solver";
+import Display from "./display";
+import FileLoader from "./fileloader";
+
 var windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
 var renderer = new THREE.WebGLRenderer();
@@ -7,13 +14,6 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(windowSize.x, windowSize.y);
 renderer.setClearColor(0x00ff00);
 document.body.appendChild(renderer.domElement);
-
-var stats = new Stats();
-stats.setMode(0);
-stats.domElement.style.position = "absolute";
-stats.domElement.style.left = "0px";
-stats.domElement.style.top = "0px";
-document.body.appendChild(stats.domElement);
 
 var grid = {
   size: new THREE.Vector2(512, 256),
@@ -28,13 +28,13 @@ var displaySettings = {
   slab: "density",
 };
 var solver, gui;
-var mouse = new F2D.Mouse(grid);
+var mouse = new Mouse(grid);
 
 function init(shaders) {
-  solver = F2D.Solver.make(grid, time, windowSize, shaders);
+  solver = Solver.make(grid, time, windowSize, shaders);
 
-  displayScalar = new F2D.Display(shaders.basic, shaders.displayscalar);
-  displayVector = new F2D.Display(shaders.basic, shaders.displayvector);
+  displayScalar = new Display(shaders.basic, shaders.displayscalar);
+  displayVector = new Display(shaders.basic, shaders.displayvector);
 
   gui = new dat.GUI();
   gui.add(displaySettings, "slab", [
@@ -90,12 +90,8 @@ function init(shaders) {
 }
 
 function update() {
-  stats.begin();
-
   solver.step(renderer, mouse);
   render();
-
-  stats.end();
   requestAnimationFrame(update);
 }
 
@@ -133,7 +129,7 @@ function resize() {
 }
 window.onresize = resize;
 
-var loader = new F2D.FileLoader("shaders", [
+var loader = new FileLoader("shaders", [
   "advect.fs",
   "basic.vs",
   "gradient.fs",

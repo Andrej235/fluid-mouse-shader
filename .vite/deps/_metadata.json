@@ -1,8 +1,25 @@
 {
-  "hash": "11fac1e5",
+  "hash": "3760cd64",
   "configHash": "c1db7305",
-  "lockfileHash": "0e1a3c7a",
-  "browserHash": "543eba51",
-  "optimized": {},
-  "chunks": {}
+  "lockfileHash": "bd85b55d",
+  "browserHash": "282cac70",
+  "optimized": {
+    "three": {
+      "src": "../../node_modules/three/three.js",
+      "file": "three.js",
+      "fileHash": "dd678f67",
+      "needsInterop": true
+    },
+    "dat.gui": {
+      "src": "../../node_modules/dat.gui/build/dat.gui.module.js",
+      "file": "dat__gui.js",
+      "fileHash": "621a65f3",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-Y2F7D3TJ": {
+      "file": "chunk-Y2F7D3TJ.js"
+    }
+  }
 }

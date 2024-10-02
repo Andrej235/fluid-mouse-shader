@@ -1,6 +1,7 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
+import SlabopBase from "./slabopbase";
 
-class VorticityConfinement extends F2D.SlabopBase {
+class VorticityConfinement extends SlabopBase {
   constructor(fs, grid, time, epsilon, curl) {
     const uniforms = {
       velocity: { type: "t" },
@@ -38,4 +39,4 @@ class VorticityConfinement extends F2D.SlabopBase {
   }
 }
 
-F2D.VorticityConfinement = VorticityConfinement;
+export default VorticityConfinement;

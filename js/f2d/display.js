@@ -1,6 +1,6 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
-F2D.Display = class {
+export default class Display {
   constructor(vs, fs, bias, scale) {
     this.bias = bias === undefined ? new THREE.Vector3(0, 0, 0) : bias;
     this.scale = scale === undefined ? new THREE.Vector3(1, 1, 1) : scale;
@@ -45,4 +45,4 @@ F2D.Display = class {
     this.uniforms.scale.value = this.scale;
     renderer.render(this.scene, this.camera);
   }
-};
+}

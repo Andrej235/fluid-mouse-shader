@@ -1,4 +1,4 @@
-var F2D = F2D === undefined ? {} : F2D;
+import * as THREE from "three";
 
 class SlabopBase {
   constructor(fs, uniforms, grid) {
@@ -21,4 +21,4 @@ class SlabopBase {
   }
 }
 
-F2D.SlabopBase = SlabopBase;
+export default SlabopBase;
