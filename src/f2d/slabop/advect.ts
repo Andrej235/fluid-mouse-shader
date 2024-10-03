@@ -1,9 +1,11 @@
-import { Grid } from "../../types/grid";
+import { Uniforms } from "./../../types/Uniforms";
+import { Grid } from "../../types/Grid";
 import { Time } from "../../types/Time";
 import SlabopBase from "./slabopbase";
+import Slab from "../slab";
 
 class Advect extends SlabopBase {
-  uniforms: any;
+  uniforms: Uniforms;
   grid: Grid;
   time: Time;
   dissipation: number;
@@ -31,7 +33,12 @@ class Advect extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, velocity, advected, output) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    velocity: Slab,
+    advected: Slab,
+    output: Slab
+  ) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.advected.value = advected.read;
     this.uniforms.gridSize.value = this.grid.size;

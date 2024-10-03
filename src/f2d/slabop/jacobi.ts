@@ -1,4 +1,7 @@
-import { Grid } from "../../types/grid";
+import { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
+import Boundary from "./boundary";
 import SlabopBase from "./slabopbase";
 
 class Jacobi extends SlabopBase {
@@ -6,7 +9,7 @@ class Jacobi extends SlabopBase {
   iterations: number;
   alpha: number;
   beta: number;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(
     fragmentShader: string,
@@ -32,14 +35,21 @@ class Jacobi extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, x, b, output, boundary, scale) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    x: Slab,
+    b: Slab,
+    output: Slab,
+    boundary: Boundary,
+    scale: number
+  ) {
     for (let i = 0; i < this.iterations; i++) {
       this.step(renderer, x, b, output);
       boundary.compute(renderer, output, scale, output);
     }
   }
 
-  step(renderer, x, b, output) {
+  step(renderer: THREE.WebGLRenderer, x: Slab, b: Slab, output: Slab) {
     this.uniforms.x.value = x.read;
     this.uniforms.b.value = b.read;
     this.uniforms.gridSize.value = this.grid.size;

@@ -1,10 +1,12 @@
 import * as THREE from "three";
-import type { Grid } from "../../types/grid";
+import type { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 
 class Boundary {
   grid: Grid;
   material: THREE.ShaderMaterial;
-  uniforms: any;
+  uniforms: Uniforms;
 
   lineL: any;
   lineR: any;
@@ -12,7 +14,7 @@ class Boundary {
   lineT: any;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
-  gridOffset = new THREE.Vector2(0, 0);
+  gridOffset: THREE.Vector2;
 
   constructor(fragmentShader: string, grid: Grid) {
     this.grid = grid;
@@ -71,10 +73,15 @@ class Boundary {
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.scene = new THREE.Scene();
 
-    this.gridOffset = new THREE.Vector3();
+    this.gridOffset = new THREE.Vector2();
   }
 
-  compute(renderer, input, scale, output) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    input: Slab,
+    scale: number,
+    output: Slab
+  ) {
     if (!this.grid.applyBoundaries) return;
 
     this.uniforms.read.value = input.read;
@@ -87,7 +94,12 @@ class Boundary {
     this.renderLine(renderer, this.lineT, [0, -1], output);
   }
 
-  renderLine(renderer, line, offset, output) {
+  renderLine(
+    renderer: THREE.WebGLRenderer,
+    line: THREE.Line,
+    offset: [number, number],
+    output: Slab
+  ) {
     this.scene.add(line);
     this.gridOffset.set(offset[0], offset[1]);
     this.uniforms.gridOffset.value = this.gridOffset;

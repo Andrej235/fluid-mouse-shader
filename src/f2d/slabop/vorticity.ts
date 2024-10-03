@@ -1,9 +1,11 @@
-import { Grid } from "../../types/grid";
+import { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 import SlabopBase from "./slabopbase";
 
 class Vorticity extends SlabopBase {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
@@ -18,7 +20,7 @@ class Vorticity extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, velocity, output) {
+  compute(renderer: THREE.WebGLRenderer, velocity: Slab, output: Slab) {
     this.uniforms.velocity.value = velocity.read;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;

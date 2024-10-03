@@ -1,3 +1,4 @@
+import { Uniforms } from "./../types/Uniforms";
 import * as THREE from "three";
 
 export default class Display {
@@ -6,7 +7,7 @@ export default class Display {
   material: THREE.ShaderMaterial;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(
     vertexShader: string,
@@ -51,7 +52,7 @@ export default class Display {
     this.bias.set(v, v, v);
     this.scale.set(v, v, v);
   }
-  render(renderer, read) {
+  render(renderer: THREE.WebGLRenderer, read: THREE.WebGLRenderTarget) {
     this.uniforms.read.value = read;
     this.uniforms.bias.value = this.bias;
     this.uniforms.scale.value = this.scale;

@@ -1,10 +1,14 @@
 import * as THREE from "three";
 
 export default class Slab {
-  read: any; //Missing type
-  write: any;
+  read: THREE.WebGLRenderTarget;
+  write: THREE.WebGLRenderTarget;
 
-  constructor(width: number, height: number, options: any) {
+  constructor(
+    width: number,
+    height: number,
+    options: THREE.WebGLRenderTargetOptions
+  ) {
     this.read = new THREE.WebGLRenderTarget(width, height, options);
     this.write = this.read.clone();
   }
@@ -13,7 +17,7 @@ export default class Slab {
     this.read = this.write;
     this.write = tmp;
   }
-  static make(width, height) {
+  static make(width: number, height: number) {
     return new Slab(width, height, options);
   }
 }

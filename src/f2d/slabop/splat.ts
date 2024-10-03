@@ -1,10 +1,12 @@
-import { Grid } from "../../types/grid";
+import { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 import SlabopBase from "./slabopbase";
 
 class Splat extends SlabopBase {
   grid: Grid;
   radius: number;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(fragmentShader: string, grid: Grid, radius: number = 0.01) {
     const uniforms = {
@@ -22,7 +24,13 @@ class Splat extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, input, color, point, output) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    input: Slab,
+    color: THREE.Vector3,
+    point: THREE.Vector2,
+    output: Slab
+  ) {
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.read.value = input.read;
     this.uniforms.color.value = color;
