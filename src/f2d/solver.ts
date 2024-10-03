@@ -185,7 +185,8 @@ class Solver {
   }
 
   clearSlab(renderer: THREE.WebGLRenderer, slab: Slab) {
-    renderer.clearTarget(slab.write, true, false, false);
+    renderer.setRenderTarget(slab.write);
+    renderer.clear(true, false, false);
     slab.swap();
   }
 
