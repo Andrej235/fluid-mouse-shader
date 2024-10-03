@@ -1,7 +1,20 @@
+import { Grid } from "../../types/grid";
 import SlabopBase from "./slabopbase";
 
 class Jacobi extends SlabopBase {
-  constructor(fs, grid, iterations = 50, alpha = -1, beta = 4) {
+  grid: Grid;
+  iterations: number;
+  alpha: number;
+  beta: number;
+  uniforms: any;
+
+  constructor(
+    fragmentShader: string,
+    grid: Grid,
+    iterations: number = 50,
+    alpha: number = -1,
+    beta: number = 4
+  ) {
     const uniforms = {
       x: { type: "t" },
       b: { type: "t" },
@@ -10,7 +23,7 @@ class Jacobi extends SlabopBase {
       beta: { type: "f" },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.iterations = iterations;

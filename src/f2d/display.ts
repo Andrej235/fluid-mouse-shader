@@ -1,7 +1,19 @@
 import * as THREE from "three";
 
 export default class Display {
-  constructor(vs, fs, bias, scale) {
+  bias: THREE.Vector3;
+  scale: THREE.Vector3;
+  material: THREE.ShaderMaterial;
+  camera: THREE.OrthographicCamera;
+  scene: THREE.Scene;
+  uniforms: any;
+
+  constructor(
+    vertexShader: string,
+    fragmentShader: string,
+    bias?: THREE.Vector3,
+    scale?: THREE.Vector3
+  ) {
     this.bias = bias === undefined ? new THREE.Vector3(0, 0, 0) : bias;
     this.scale = scale === undefined ? new THREE.Vector3(1, 1, 1) : scale;
 
@@ -18,8 +30,8 @@ export default class Display {
     };
     this.material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
-      vertexShader: vs,
-      fragmentShader: fs,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
       depthWrite: false,
       depthTest: false,
       blending: THREE.NoBlending,

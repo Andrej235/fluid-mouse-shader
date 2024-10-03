@@ -4,6 +4,8 @@ import Mouse from "./mouse";
 import Solver from "./solver";
 import Display from "./display";
 import FileLoader from "./fileloader";
+import { Grid } from "../types/grid";
+import { Time } from "../types/Time";
 
 let windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
@@ -15,22 +17,27 @@ renderer.setSize(windowSize.x, windowSize.y);
 renderer.setClearColor(0x00ff00);
 document.body.appendChild(renderer.domElement);
 
-let grid = {
+let grid: Grid = {
   size: new THREE.Vector2(512, 256),
   scale: 1,
   applyBoundaries: true,
 };
-let time = {
+let time: Time = {
   step: 1,
 };
-let displayScalar, displayVector;
-let displaySettings = {
+let displayScalar: Display;
+let displayVector: Display;
+let displaySettings: {
+  slab: "density" | "velocity" | "divergence" | "pressure";
+} = {
   slab: "density",
 };
-let solver, gui;
+
+let solver: Solver;
+let gui: dat.GUI;
 let mouse = new Mouse(grid);
 
-function init(shaders) {
+function init(shaders: Record<string, string>) {
   solver = Solver.make(grid, time, windowSize, shaders);
 
   displayScalar = new Display(shaders.basic, shaders.displayscalar);
@@ -145,7 +152,7 @@ let loader = new FileLoader("shaders", [
 ]);
 loader.run(function (files) {
   // remove file extension before passing shaders to init
-  let shaders = {};
+  let shaders: Record<string, string> = {};
   for (let name in files) {
     shaders[name.split(".")[0]] = files[name];
   }

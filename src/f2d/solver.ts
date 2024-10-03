@@ -8,9 +8,46 @@ import Splat from "./slabop/splat";
 import Vorticity from "./slabop/vorticity";
 import VorticityConfinement from "./slabop/vorticityconfinement";
 import Jacobi from "./slabop/jacobi";
+import { Grid } from "../types/grid";
+import { Time } from "../types/Time";
+import { Slabs } from "../types/Slabs";
+import { Slabop } from "../types/Slabop";
 
 class Solver {
-  constructor(grid, time, windowSize, slabs, slabop) {
+  grid: Grid;
+  time: Time;
+  windowSize: THREE.Vector2;
+
+  velocity: Slab;
+  density: Slab;
+  velocityDivergence: Slab;
+  velocityVorticity: Slab;
+  pressure: Slab;
+
+  advect: Advect;
+  diffuse: Jacobi;
+  divergence: Divergence;
+  poissonPressureEq: Jacobi;
+  gradient: Gradient;
+  splat: Splat;
+  vorticity: Vorticity;
+  vorticityConfinement: VorticityConfinement;
+  boundary: Boundary;
+
+  viscosity: number;
+  applyViscosity: boolean;
+  applyVorticity: boolean;
+
+  source: THREE.Vector3;
+  ink: THREE.Vector3;
+
+  constructor(
+    grid: Grid,
+    time: Time,
+    windowSize: THREE.Vector2,
+    slabs: Slabs,
+    slabop: Slabop
+  ) {
     this.grid = grid;
     this.time = time;
     this.windowSize = windowSize;

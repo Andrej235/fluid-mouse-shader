@@ -1,7 +1,12 @@
+import { Grid } from "../../types/grid";
 import SlabopBase from "./slabopbase";
 
 class Splat extends SlabopBase {
-  constructor(fs, grid, radius = 0.01) {
+  grid: Grid;
+  radius: number;
+  uniforms: any;
+
+  constructor(fragmentShader: string, grid: Grid, radius: number = 0.01) {
     const uniforms = {
       read: { type: "t" },
       gridSize: { type: "v2" },
@@ -10,7 +15,7 @@ class Splat extends SlabopBase {
       radius: { type: "f" },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.radius = radius;
@@ -29,4 +34,4 @@ class Splat extends SlabopBase {
   }
 }
 
-export default Splat
+export default Splat;

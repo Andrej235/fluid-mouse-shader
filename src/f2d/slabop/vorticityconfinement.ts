@@ -1,8 +1,22 @@
 import * as THREE from "three";
 import SlabopBase from "./slabopbase";
+import { Grid } from "../../types/grid";
+import { Time } from "../../types/Time";
 
 class VorticityConfinement extends SlabopBase {
-  constructor(fs, grid, time, epsilon, curl) {
+  grid: Grid;
+  time: Time;
+  epsilon: number;
+  curl: number;
+  uniforms: any;
+
+  constructor(
+    fragmentShader: string,
+    grid: Grid,
+    time: Time,
+    epsilon?: number,
+    curl?: number
+  ) {
     const uniforms = {
       velocity: { type: "t" },
       vorticity: { type: "t" },
@@ -13,7 +27,7 @@ class VorticityConfinement extends SlabopBase {
       curl: { type: "v2", value: new THREE.Vector2() },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.time = time;

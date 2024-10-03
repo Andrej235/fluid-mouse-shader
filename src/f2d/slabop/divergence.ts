@@ -1,14 +1,18 @@
+import { Grid } from "../../types/grid";
 import SlabopBase from "./slabopbase";
 
 class Divergence extends SlabopBase {
-  constructor(fs, grid) {
+  grid: Grid;
+  uniforms: any;
+
+  constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
       velocity: { type: "t" },
       gridSize: { type: "v2" },
       gridScale: { type: "f" },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.uniforms = uniforms;

@@ -4,8 +4,17 @@ import * as THREE from "three";
 // file has been loaded with its response text.
 // Construct a file loader with a suffix path that is prepended to all
 // names.
+type File = {
+  name: string;
+  url: string;
+  text?: string;
+};
+
 export default class FileLoader {
-  constructor(path, names) {
+  path: string;
+  queue: File[];
+
+  constructor(path: string, names: string[]) {
     this.path = path;
     this.queue = [];
     for (let i = 0; i < names.length; i++) {

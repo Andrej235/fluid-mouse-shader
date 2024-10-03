@@ -1,7 +1,20 @@
 import * as THREE from "three";
+import type { Grid } from "../../types/grid";
 
 class Boundary {
-  constructor(fs, grid) {
+  grid: Grid;
+  material: THREE.ShaderMaterial;
+  uniforms: any;
+
+  lineL: any;
+  lineR: any;
+  lineB: any;
+  lineT: any;
+  camera: THREE.OrthographicCamera;
+  scene: THREE.Scene;
+  gridOffset = new THREE.Vector2(0, 0);
+
+  constructor(fragmentShader: string, grid: Grid) {
     this.grid = grid;
 
     this.uniforms = {
@@ -13,13 +26,13 @@ class Boundary {
 
     this.material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
-      fragmentShader: fs,
+      fragmentShader: fragmentShader,
       depthWrite: false,
       depthTest: false,
       blending: THREE.NoBlending,
     });
 
-    const createLine = (positions) => {
+    const createLine = (positions: [number, number, number][]) => {
       const vertices = new Float32Array(positions.length * 3);
       for (let i = 0; i < positions.length; i++) {
         vertices[i * 3] = positions[i][0];
@@ -83,4 +96,4 @@ class Boundary {
   }
 }
 
-export default Boundary
+export default Boundary;

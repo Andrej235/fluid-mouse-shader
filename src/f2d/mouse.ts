@@ -1,7 +1,14 @@
 import * as THREE from "three";
+import { Grid } from "../types/grid";
 
 export default class Mouse {
-  constructor(grid) {
+  grid: Grid;
+  left: boolean;
+  right: boolean;
+  position: THREE.Vector2;
+  motions: any[];
+
+  constructor(grid: Grid) {
     this.grid = grid;
 
     this.left = false;
@@ -18,17 +25,20 @@ export default class Mouse {
       false
     );
   }
-  mouseDown(event) {
+
+  mouseDown(event: MouseEvent) {
     this.position.set(event.clientX, event.clientY);
     this.left = event.button === 0 ? true : this.left;
     this.right = event.button === 2 ? true : this.right;
   }
-  mouseUp(event) {
+
+  mouseUp(event: MouseEvent) {
     event.preventDefault();
     this.left = event.button === 0 ? false : this.left;
     this.right = event.button === 2 ? false : this.right;
   }
-  mouseMove(event) {
+
+  mouseMove(event: MouseEvent) {
     event.preventDefault();
     let r = this.grid.scale;
 
@@ -59,7 +69,8 @@ export default class Mouse {
 
     this.position.set(x, y);
   }
-  contextMenu(event) {
+
+  contextMenu(event: MouseEvent) {
     event.preventDefault();
   }
 }

@@ -1,7 +1,19 @@
+import { Grid } from "../../types/grid";
+import { Time } from "../../types/Time";
 import SlabopBase from "./slabopbase";
 
 class Advect extends SlabopBase {
-  constructor(fs, grid, time, dissipation = 0.998) {
+  uniforms: any;
+  grid: Grid;
+  time: Time;
+  dissipation: number;
+
+  constructor(
+    fragmentShader: string,
+    grid: Grid,
+    time: Time,
+    dissipation: number = 0.998
+  ) {
     const uniforms = {
       velocity: { type: "t" },
       advected: { type: "t" },
@@ -11,7 +23,7 @@ class Advect extends SlabopBase {
       dissipation: { type: "f" },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.time = time;

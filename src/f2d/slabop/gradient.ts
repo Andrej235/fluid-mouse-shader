@@ -1,7 +1,11 @@
+import { Grid } from "../../types/grid";
 import SlabopBase from "./slabopbase";
 
 class Gradient extends SlabopBase {
-  constructor(fs, grid) {
+  grid: Grid;
+  uniforms: any;
+
+  constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
       p: { type: "t" },
       w: { type: "t" },
@@ -9,7 +13,7 @@ class Gradient extends SlabopBase {
       gridScale: { type: "f" },
     };
 
-    super(fs, uniforms, grid);
+    super(fragmentShader, uniforms, grid);
 
     this.grid = grid;
     this.uniforms = uniforms;
