@@ -8,10 +8,11 @@ import Splat from "./slabop/splat";
 import Vorticity from "./slabop/vorticity";
 import VorticityConfinement from "./slabop/vorticityconfinement";
 import Jacobi from "./slabop/jacobi";
-import { Grid } from "../types/grid";
+import { Grid } from "../types/Grid";
 import { Time } from "../types/Time";
 import { Slabs } from "../types/Slabs";
 import { Slabop } from "../types/Slabop";
+import Mouse from "./mouse";
 
 class Solver {
   grid: Grid;
@@ -79,7 +80,7 @@ class Solver {
     this.ink = new THREE.Vector3(0.0, 0.06, 0.19);
   }
 
-  step(renderer, mouse) {
+  step(renderer: THREE.WebGLRenderer, mouse: Mouse) {
     // we only want the quantity carried by the velocity field to be
     // affected by the dissipation
     let temp = this.advect.dissipation;
@@ -121,7 +122,7 @@ class Solver {
     this.project(renderer);
   }
 
-  addForces(renderer, mouse) {
+  addForces(renderer: THREE.WebGLRenderer, mouse: Mouse) {
     const point = new THREE.Vector2();
     const force = new THREE.Vector3();
     for (let i = 0; i < mouse.motions.length; i++) {
@@ -158,7 +159,7 @@ class Solver {
   }
 
   // solve poisson equation and subtract pressure gradient
-  project(renderer) {
+  project(renderer: THREE.WebGLRenderer) {
     this.divergence.compute(renderer, this.velocity, this.velocityDivergence);
 
     // 0 is our initial guess for the poisson equation solver
@@ -183,12 +184,18 @@ class Solver {
     this.boundary.compute(renderer, this.velocity, -1, this.velocity);
   }
 
-  clearSlab(renderer, slab) {
-    renderer.clearTarget(slab.write, true, false, false);
+  clearSlab(renderer: THREE.WebGLRenderer, slab: Slab) {
+    renderer.setRenderTarget(slab.write);
+    renderer.clear(true, false, false);
     slab.swap();
   }
 
-  static make(grid, time, windowSize, shaders) {
+  static make(
+    grid: Grid,
+    time: Time,
+    windowSize: THREE.Vector2,
+    shaders: Record<string, string>
+  ) {
     const w = grid.size.x,
       h = grid.size.y;
 

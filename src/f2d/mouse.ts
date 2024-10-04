@@ -1,5 +1,5 @@
+import { Grid } from "./../types/Grid";
 import * as THREE from "three";
-import { Grid } from "../types/grid";
 
 export default class Mouse {
   grid: Grid;

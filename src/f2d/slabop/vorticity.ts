@@ -1,15 +1,18 @@
-import { Grid } from "../../types/grid";
+import { Vector2 } from "three";
+import { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 import SlabopBase from "./slabopbase";
 
 class Vorticity extends SlabopBase {
   grid: Grid;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
-      velocity: { type: "t" },
-      gridSize: { type: "v2" },
-      gridScale: { type: "f" },
+      velocity: { value: null },
+      gridSize: { value: new Vector2() },
+      gridScale: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -18,12 +21,14 @@ class Vorticity extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, velocity, output) {
-    this.uniforms.velocity.value = velocity.read;
+  compute(renderer: THREE.WebGLRenderer, velocity: Slab, output: Slab) {
+    this.uniforms.velocity.value = velocity.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }

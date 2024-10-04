@@ -1,3 +1,4 @@
+import { Uniforms } from "./../types/Uniforms";
 import * as THREE from "three";
 
 export default class Display {
@@ -6,7 +7,7 @@ export default class Display {
   material: THREE.ShaderMaterial;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(
     vertexShader: string,
@@ -18,16 +19,11 @@ export default class Display {
     this.scale = scale === undefined ? new THREE.Vector3(1, 1, 1) : scale;
 
     this.uniforms = {
-      read: {
-        type: "t",
-      },
-      bias: {
-        type: "v3",
-      },
-      scale: {
-        type: "v3",
-      },
+      read: { value: null },
+      bias: { value: new THREE.Vector3() },
+      scale: { value: new THREE.Vector3() },
     };
+
     this.material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader: vertexShader,
@@ -37,7 +33,7 @@ export default class Display {
       blending: THREE.NoBlending,
     });
     let quad = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(2, 2),
+      new THREE.PlaneGeometry(2, 2),
       this.material
     );
 
@@ -51,8 +47,8 @@ export default class Display {
     this.bias.set(v, v, v);
     this.scale.set(v, v, v);
   }
-  render(renderer, read) {
-    this.uniforms.read.value = read;
+  render(renderer: THREE.WebGLRenderer, read: THREE.WebGLRenderTarget) {
+    this.uniforms.read.value = read.texture;
     this.uniforms.bias.value = this.bias;
     this.uniforms.scale.value = this.scale;
     renderer.render(this.scene, this.camera);

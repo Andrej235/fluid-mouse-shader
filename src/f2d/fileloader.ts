@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 // Loads arbitrary number of files in a batch and gives a callback when every
 // file has been loaded with its response text.
 // Construct a file loader with a suffix path that is prepended to all
@@ -29,11 +27,13 @@ export default class FileLoader {
   }
   // Load all files currently in the queue, calls onDone when all files
   // has been downloaded.
-  run(onDone) {
-    let files = {};
+  run(onDone: (files: Record<string, string>) => void) {
+    let files: Record<string, string> = {};
     let filesRemaining = this.queue.length;
 
-    let fileLoaded = function (file) {
+    let fileLoaded = function (file: File) {
+      if (file.text === undefined) return;
+
       files[file.name] = file.text;
       filesRemaining--;
       if (filesRemaining === 0) {
@@ -41,7 +41,7 @@ export default class FileLoader {
       }
     };
 
-    let loadFile = function (file) {
+    let loadFile = function (file: File) {
       let request = new XMLHttpRequest();
       request.onload = function () {
         if (request.status === 200) {

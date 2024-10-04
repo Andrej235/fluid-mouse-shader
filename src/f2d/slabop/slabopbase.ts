@@ -1,12 +1,13 @@
+import { Uniforms } from './../../types/Uniforms';
 import * as THREE from "three";
-import { Grid } from "../../types/grid";
+import { Grid } from "../../types/Grid";
 
 class SlabopBase {
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
 
-  constructor(fragmentShader: string, uniforms: any, grid: Grid) {
-    const geometry = new THREE.PlaneBufferGeometry(
+  constructor(fragmentShader: string, uniforms: Uniforms, grid: Grid) {
+    const geometry = new THREE.PlaneGeometry(
       (2 * (grid.size.x - 2)) / grid.size.x,
       (2 * (grid.size.y - 2)) / grid.size.y
     );

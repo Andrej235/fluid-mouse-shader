@@ -1,27 +1,29 @@
 import * as THREE from "three";
-import type { Grid } from "../../types/grid";
+import type { Grid } from "../../types/Grid";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 
 class Boundary {
   grid: Grid;
   material: THREE.ShaderMaterial;
-  uniforms: any;
+  uniforms: Uniforms;
 
-  lineL: any;
-  lineR: any;
-  lineB: any;
-  lineT: any;
+  lineL: THREE.Line;
+  lineR: THREE.Line;
+  lineB: THREE.Line;
+  lineT: THREE.Line;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
-  gridOffset = new THREE.Vector2(0, 0);
+  gridOffset: THREE.Vector2;
 
   constructor(fragmentShader: string, grid: Grid) {
     this.grid = grid;
 
     this.uniforms = {
-      read: { type: "t" },
-      gridSize: { type: "v2" },
-      gridOffset: { type: "v2" },
-      scale: { type: "f" },
+      read: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridOffset: { value: new THREE.Vector2() },
+      scale: { value: 1.0 },
     };
 
     this.material = new THREE.ShaderMaterial({
@@ -41,7 +43,7 @@ class Boundary {
       }
 
       const geometry = new THREE.BufferGeometry();
-      geometry.addAttribute("position", new THREE.BufferAttribute(vertices, 3));
+      geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 
       return new THREE.Line(geometry, this.material);
     };
@@ -71,13 +73,18 @@ class Boundary {
     this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.scene = new THREE.Scene();
 
-    this.gridOffset = new THREE.Vector3();
+    this.gridOffset = new THREE.Vector2();
   }
 
-  compute(renderer, input, scale, output) {
+  compute(
+    renderer: THREE.WebGLRenderer,
+    input: Slab,
+    scale: number,
+    output: Slab
+  ) {
     if (!this.grid.applyBoundaries) return;
 
-    this.uniforms.read.value = input.read;
+    this.uniforms.read.value = input.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.scale.value = scale;
 
@@ -87,11 +94,19 @@ class Boundary {
     this.renderLine(renderer, this.lineT, [0, -1], output);
   }
 
-  renderLine(renderer, line, offset, output) {
+  renderLine(
+    renderer: THREE.WebGLRenderer,
+    line: THREE.Line,
+    offset: [number, number],
+    output: Slab
+  ) {
     this.scene.add(line);
     this.gridOffset.set(offset[0], offset[1]);
     this.uniforms.gridOffset.value = this.gridOffset;
-    renderer.render(this.scene, this.camera, output.write, false);
+
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     this.scene.remove(line);
   }
 }

@@ -4,12 +4,12 @@ import Mouse from "./mouse";
 import Solver from "./solver";
 import Display from "./display";
 import FileLoader from "./fileloader";
-import { Grid } from "../types/grid";
+import { Grid } from "../types/Grid";
 import { Time } from "../types/Time";
 
 let windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
-let renderer = new THREE.WebGLRenderer();
+let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
 renderer.autoClear = false;
 renderer.sortObjects = false;
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -150,7 +150,7 @@ let loader = new FileLoader("shaders", [
   "vorticityforce.fs",
   "boundary.fs",
 ]);
-loader.run(function (files) {
+loader.run((files) => {
   // remove file extension before passing shaders to init
   let shaders: Record<string, string> = {};
   for (let name in files) {

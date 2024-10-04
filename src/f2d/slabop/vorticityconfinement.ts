@@ -1,14 +1,16 @@
 import * as THREE from "three";
 import SlabopBase from "./slabopbase";
-import { Grid } from "../../types/grid";
+import { Grid } from "../../types/Grid";
 import { Time } from "../../types/Time";
+import { Uniforms } from "../../types/Uniforms";
+import Slab from "../slab";
 
 class VorticityConfinement extends SlabopBase {
   grid: Grid;
   time: Time;
   epsilon: number;
   curl: number;
-  uniforms: any;
+  uniforms: Uniforms;
 
   constructor(
     fragmentShader: string,
@@ -18,13 +20,13 @@ class VorticityConfinement extends SlabopBase {
     curl?: number
   ) {
     const uniforms = {
-      velocity: { type: "t" },
-      vorticity: { type: "t" },
-      gridSize: { type: "v2" },
-      gridScale: { type: "f" },
-      timestep: { type: "f" },
-      epsilon: { type: "f" },
-      curl: { type: "v2", value: new THREE.Vector2() },
+      velocity: { value: null },
+      vorticity: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridScale: { value: 1.0 },
+      timestep: { value: 1.0 },
+      epsilon: { value: 1.0 },
+      curl: { value: new THREE.Vector2() },
     };
 
     super(fragmentShader, uniforms, grid);
@@ -36,9 +38,14 @@ class VorticityConfinement extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer, velocity, vorticity, output) {
-    this.uniforms.velocity.value = velocity.read;
-    this.uniforms.vorticity.value = vorticity.read;
+  compute(
+    renderer: THREE.WebGLRenderer,
+    velocity: Slab,
+    vorticity: Slab,
+    output: Slab
+  ) {
+    this.uniforms.velocity.value = velocity.read.texture;
+    this.uniforms.vorticity.value = vorticity.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
     this.uniforms.timestep.value = this.time.step;
@@ -48,7 +55,9 @@ class VorticityConfinement extends SlabopBase {
       this.curl * this.grid.scale
     );
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }
