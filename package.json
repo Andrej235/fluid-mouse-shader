@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@types/dat.gui": "^0.7.13",
-    "@types/three": "^0.140.0",
-    "three": "^0.140.0"
+    "@types/three": "^0.150.0",
+    "three": "^0.150.0"
   },
   "devDependencies": {
     "dat.gui": "^0.7.9",
