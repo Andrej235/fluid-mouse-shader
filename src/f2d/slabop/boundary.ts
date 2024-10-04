@@ -43,7 +43,7 @@ class Boundary {
       }
 
       const geometry = new THREE.BufferGeometry();
-      geometry.addAttribute("position", new THREE.BufferAttribute(vertices, 3));
+      geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
 
       return new THREE.Line(geometry, this.material);
     };
