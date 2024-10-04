@@ -56,7 +56,9 @@ class Jacobi extends SlabopBase {
     this.uniforms.alpha.value = this.alpha;
     this.uniforms.beta.value = this.beta;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }

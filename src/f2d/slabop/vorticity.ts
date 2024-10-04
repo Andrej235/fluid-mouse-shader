@@ -25,7 +25,9 @@ class Vorticity extends SlabopBase {
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }

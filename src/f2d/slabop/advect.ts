@@ -46,7 +46,9 @@ class Advect extends SlabopBase {
     this.uniforms.timestep.value = this.time.step;
     this.uniforms.dissipation.value = this.dissipation;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }

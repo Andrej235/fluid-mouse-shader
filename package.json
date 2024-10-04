@@ -11,7 +11,7 @@
   "dependencies": {
     "@types/dat.gui": "^0.7.13",
     "@types/three": "^0.93.31",
-    "three": "^0.100.0"
+    "three": "^0.102.0"
   },
   "devDependencies": {
     "dat.gui": "^0.7.9",

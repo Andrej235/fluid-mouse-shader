@@ -37,7 +37,9 @@ class Splat extends SlabopBase {
     this.uniforms.point.value = point;
     this.uniforms.radius.value = this.radius;
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }

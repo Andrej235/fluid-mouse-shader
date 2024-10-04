@@ -25,7 +25,9 @@ class Divergence extends SlabopBase {
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
-    renderer.render(this.scene, this.camera, divergence.write, false);
+    renderer.setRenderTarget(divergence.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     divergence.swap();
   }
 }

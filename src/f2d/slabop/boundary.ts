@@ -103,7 +103,10 @@ class Boundary {
     this.scene.add(line);
     this.gridOffset.set(offset[0], offset[1]);
     this.uniforms.gridOffset.value = this.gridOffset;
-    renderer.render(this.scene, this.camera, output.write, false);
+
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     this.scene.remove(line);
   }
 }

@@ -55,7 +55,9 @@ class VorticityConfinement extends SlabopBase {
       this.curl * this.grid.scale
     );
 
-    renderer.render(this.scene, this.camera, output.write, false);
+    renderer.setRenderTarget(output.write);
+    renderer.render(this.scene, this.camera);
+    renderer.setRenderTarget(null);
     output.swap();
   }
 }
