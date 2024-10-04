@@ -84,7 +84,7 @@ class Boundary {
   ) {
     if (!this.grid.applyBoundaries) return;
 
-    this.uniforms.read.value = input.read;
+    this.uniforms.read.value = input.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.scale.value = scale;
 

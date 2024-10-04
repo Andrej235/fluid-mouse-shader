@@ -40,8 +40,8 @@ class Advect extends SlabopBase {
     advected: Slab,
     output: Slab
   ) {
-    this.uniforms.velocity.value = velocity.read;
-    this.uniforms.advected.value = advected.read;
+    this.uniforms.velocity.value = velocity.read.texture;
+    this.uniforms.advected.value = advected.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
     this.uniforms.timestep.value = this.time.step;

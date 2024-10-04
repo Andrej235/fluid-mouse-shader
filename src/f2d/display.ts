@@ -19,16 +19,11 @@ export default class Display {
     this.scale = scale === undefined ? new THREE.Vector3(1, 1, 1) : scale;
 
     this.uniforms = {
-      read: {
-        type: "t",
-      },
-      bias: {
-        type: "v3",
-      },
-      scale: {
-        type: "v3",
-      },
+      read: { value: null },
+      bias: { value: new THREE.Vector3() },
+      scale: { value: new THREE.Vector3() },
     };
+
     this.material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader: vertexShader,
@@ -53,7 +48,7 @@ export default class Display {
     this.scale.set(v, v, v);
   }
   render(renderer: THREE.WebGLRenderer, read: THREE.WebGLRenderTarget) {
-    this.uniforms.read.value = read;
+    this.uniforms.read.value = read.texture;
     this.uniforms.bias.value = this.bias;
     this.uniforms.scale.value = this.scale;
     renderer.render(this.scene, this.camera);

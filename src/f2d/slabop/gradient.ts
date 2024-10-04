@@ -23,8 +23,8 @@ class Gradient extends SlabopBase {
   }
 
   compute(renderer: THREE.WebGLRenderer, p: Slab, w: Slab, output: Slab) {
-    this.uniforms.p.value = p.read;
-    this.uniforms.w.value = w.read;
+    this.uniforms.p.value = p.read.texture;
+    this.uniforms.w.value = w.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 

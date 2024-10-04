@@ -33,7 +33,7 @@ class Splat extends SlabopBase {
     output: Slab
   ) {
     this.uniforms.gridSize.value = this.grid.size;
-    this.uniforms.read.value = input.read;
+    this.uniforms.read.value = input.read.texture;
     this.uniforms.color.value = color;
     this.uniforms.point.value = point;
     this.uniforms.radius.value = this.radius;

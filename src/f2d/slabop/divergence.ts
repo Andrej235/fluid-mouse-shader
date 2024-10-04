@@ -22,7 +22,7 @@ class Divergence extends SlabopBase {
   }
 
   compute(renderer: THREE.WebGLRenderer, velocity: Slab, divergence: Slab) {
-    this.uniforms.velocity.value = velocity.read;
+    this.uniforms.velocity.value = velocity.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
 
