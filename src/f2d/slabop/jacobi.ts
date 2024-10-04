@@ -1,3 +1,4 @@
+import { Vector2 } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -19,11 +20,11 @@ class Jacobi extends SlabopBase {
     beta: number = 4
   ) {
     const uniforms = {
-      x: { type: "t" },
-      b: { type: "t" },
-      gridSize: { type: "v2" },
-      alpha: { type: "f" },
-      beta: { type: "f" },
+      x: { value: null },
+      b: { value: null },
+      gridSize: { value: new Vector2() },
+      alpha: { value: 1.0 },
+      beta: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);

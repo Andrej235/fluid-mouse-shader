@@ -1,3 +1,5 @@
-import { ShaderMaterialParameters } from "three";
+import { IUniform } from "three";
 
-export type Uniforms = ShaderMaterialParameters["uniforms"];
+export type Uniforms = {
+  [uniform: string]: IUniform<any>;
+};

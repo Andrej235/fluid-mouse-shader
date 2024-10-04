@@ -1,3 +1,4 @@
+import { Vector2, Vector3 } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -10,11 +11,11 @@ class Splat extends SlabopBase {
 
   constructor(fragmentShader: string, grid: Grid, radius: number = 0.01) {
     const uniforms = {
-      read: { type: "t" },
-      gridSize: { type: "v2" },
-      color: { type: "v3" },
-      point: { type: "v2" },
-      radius: { type: "f" },
+      read: { value: null },
+      gridSize: { value: new Vector2() },
+      color: { value: new Vector3() },
+      point: { value: new Vector2() },
+      radius: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);

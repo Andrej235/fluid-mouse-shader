@@ -8,10 +8,10 @@ class Boundary {
   material: THREE.ShaderMaterial;
   uniforms: Uniforms;
 
-  lineL: any;
-  lineR: any;
-  lineB: any;
-  lineT: any;
+  lineL: THREE.Line;
+  lineR: THREE.Line;
+  lineB: THREE.Line;
+  lineT: THREE.Line;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
   gridOffset: THREE.Vector2;
@@ -20,10 +20,10 @@ class Boundary {
     this.grid = grid;
 
     this.uniforms = {
-      read: { type: "t" },
-      gridSize: { type: "v2" },
-      gridOffset: { type: "v2" },
-      scale: { type: "f" },
+      read: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridOffset: { value: new THREE.Vector2() },
+      scale: { value: 1.0 },
     };
 
     this.material = new THREE.ShaderMaterial({

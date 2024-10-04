@@ -1,3 +1,4 @@
+import { Vector2 } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -9,9 +10,9 @@ class Vorticity extends SlabopBase {
 
   constructor(fragmentShader: string, grid: Grid) {
     const uniforms = {
-      velocity: { type: "t" },
-      gridSize: { type: "v2" },
-      gridScale: { type: "f" },
+      velocity: { value: null },
+      gridSize: { value: new Vector2() },
+      gridScale: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);

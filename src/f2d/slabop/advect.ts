@@ -3,6 +3,7 @@ import { Grid } from "../../types/Grid";
 import { Time } from "../../types/Time";
 import SlabopBase from "./slabopbase";
 import Slab from "../slab";
+import { Vector2 } from "three";
 
 class Advect extends SlabopBase {
   uniforms: Uniforms;
@@ -17,12 +18,12 @@ class Advect extends SlabopBase {
     dissipation: number = 0.998
   ) {
     const uniforms = {
-      velocity: { type: "t" },
-      advected: { type: "t" },
-      gridSize: { type: "v2" },
-      gridScale: { type: "f" },
-      timestep: { type: "f" },
-      dissipation: { type: "f" },
+      velocity: { value: null }, // assuming you'll set this later with a texture
+      advected: { value: null }, // assuming you'll set this later with a texture
+      gridSize: { value: new Vector2() },
+      gridScale: { value: 1.0 },
+      timestep: { value: 1.0 },
+      dissipation: { value: 1.0 },
     };
 
     super(fragmentShader, uniforms, grid);

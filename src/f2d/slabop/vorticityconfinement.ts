@@ -20,13 +20,13 @@ class VorticityConfinement extends SlabopBase {
     curl?: number
   ) {
     const uniforms = {
-      velocity: { type: "t" },
-      vorticity: { type: "t" },
-      gridSize: { type: "v2" },
-      gridScale: { type: "f" },
-      timestep: { type: "f" },
-      epsilon: { type: "f" },
-      curl: { type: "v2", value: new THREE.Vector2() },
+      velocity: { value: null },
+      vorticity: { value: null },
+      gridSize: { value: new THREE.Vector2() },
+      gridScale: { value: 1.0 },
+      timestep: { value: 1.0 },
+      epsilon: { value: 1.0 },
+      curl: { value: new THREE.Vector2() },
     };
 
     super(fragmentShader, uniforms, grid);
