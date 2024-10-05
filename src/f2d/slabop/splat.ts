@@ -1,4 +1,4 @@
-import { Vector2, Vector3 } from "three";
+import { Vector2, Vector3, WebGLRenderer } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -26,10 +26,10 @@ class Splat extends SlabopBase {
   }
 
   compute(
-    renderer: THREE.WebGLRenderer,
+    renderer: WebGLRenderer,
     input: Slab,
-    color: THREE.Vector3,
-    point: THREE.Vector2,
+    color: Vector3,
+    point: Vector2,
     output: Slab
   ) {
     this.uniforms.gridSize.value = this.grid.size;

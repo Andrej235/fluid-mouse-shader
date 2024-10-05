@@ -6,7 +6,18 @@ export default class Mouse {
   left: boolean;
   right: boolean;
   position: THREE.Vector2;
-  motions: any[];
+  motions: {
+    left: boolean;
+    right: boolean;
+    drag: {
+      x: number;
+      y: number;
+    };
+    position: {
+      x: number;
+      y: number;
+    };
+  }[];
 
   constructor(grid: Grid) {
     this.grid = grid;
@@ -16,14 +27,10 @@ export default class Mouse {
     this.position = new THREE.Vector2();
     this.motions = [];
 
-    document.addEventListener("mousedown", this.mouseDown.bind(this), false);
-    document.addEventListener("mouseup", this.mouseUp.bind(this), false);
-    document.addEventListener("mousemove", this.mouseMove.bind(this), false);
-    document.addEventListener(
-      "contextmenu",
-      this.contextMenu.bind(this),
-      false
-    );
+    document.addEventListener("mousedown", this.mouseDown.bind(this));
+    document.addEventListener("mouseup", this.mouseUp.bind(this));
+    document.addEventListener("mousemove", this.mouseMove.bind(this));
+    document.addEventListener("contextmenu", this.contextMenu.bind(this));
   }
 
   mouseDown(event: MouseEvent) {
@@ -62,8 +69,8 @@ export default class Mouse {
       this.motions.push({
         left: this.left,
         right: this.right,
-        drag: drag,
-        position: position,
+        drag,
+        position,
       });
     }
 

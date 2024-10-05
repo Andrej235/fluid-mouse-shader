@@ -1,4 +1,4 @@
-import { Vector2 } from "three";
+import { Vector2, WebGLRenderer } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -22,7 +22,7 @@ class Gradient extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer: THREE.WebGLRenderer, p: Slab, w: Slab, output: Slab) {
+  compute(renderer: WebGLRenderer, p: Slab, w: Slab, output: Slab) {
     this.uniforms.p.value = p.read.texture;
     this.uniforms.w.value = w.read.texture;
     this.uniforms.gridSize.value = this.grid.size;

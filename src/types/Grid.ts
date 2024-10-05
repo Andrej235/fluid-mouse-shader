@@ -1,5 +1,7 @@
+import { Vector2 } from "three";
+
 export type Grid = {
-  size: any;
+  size: Vector2;
   scale: number;
   applyBoundaries: boolean;
 };

@@ -3,7 +3,7 @@ import { Grid } from "../../types/Grid";
 import { Time } from "../../types/Time";
 import SlabopBase from "./slabopbase";
 import Slab from "../slab";
-import { Vector2 } from "three";
+import { Vector2, WebGLRenderer } from "three";
 
 class Advect extends SlabopBase {
   uniforms: Uniforms;
@@ -35,7 +35,7 @@ class Advect extends SlabopBase {
   }
 
   compute(
-    renderer: THREE.WebGLRenderer,
+    renderer: WebGLRenderer,
     velocity: Slab,
     advected: Slab,
     output: Slab

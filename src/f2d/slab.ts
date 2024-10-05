@@ -7,7 +7,7 @@ export default class Slab {
   constructor(
     width: number,
     height: number,
-    options: THREE.WebGLRenderTargetOptions
+    options: THREE.RenderTargetOptions
   ) {
     this.read = new THREE.WebGLRenderTarget(width, height, options);
     this.write = this.read.clone();

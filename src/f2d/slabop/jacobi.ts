@@ -1,4 +1,4 @@
-import { Vector2 } from "three";
+import { Vector2, WebGLRenderer } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -37,7 +37,7 @@ class Jacobi extends SlabopBase {
   }
 
   compute(
-    renderer: THREE.WebGLRenderer,
+    renderer: WebGLRenderer,
     x: Slab,
     b: Slab,
     output: Slab,
@@ -50,7 +50,7 @@ class Jacobi extends SlabopBase {
     }
   }
 
-  step(renderer: THREE.WebGLRenderer, x: Slab, b: Slab, output: Slab) {
+  step(renderer: WebGLRenderer, x: Slab, b: Slab, output: Slab) {
     this.uniforms.x.value = x.read.texture;
     this.uniforms.b.value = b.read.texture;
     this.uniforms.gridSize.value = this.grid.size;

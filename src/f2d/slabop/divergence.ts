@@ -1,4 +1,4 @@
-import { Vector2 } from "three";
+import { Vector2, WebGLRenderer } from "three";
 import { Grid } from "../../types/Grid";
 import { Uniforms } from "../../types/Uniforms";
 import Slab from "../slab";
@@ -21,7 +21,7 @@ class Divergence extends SlabopBase {
     this.uniforms = uniforms;
   }
 
-  compute(renderer: THREE.WebGLRenderer, velocity: Slab, divergence: Slab) {
+  compute(renderer: WebGLRenderer, velocity: Slab, divergence: Slab) {
     this.uniforms.velocity.value = velocity.read.texture;
     this.uniforms.gridSize.value = this.grid.size;
     this.uniforms.gridScale.value = this.grid.scale;
